@@ -1,5 +1,11 @@
 var koa = require('koa');
 var app = module.exports = koa();
+var send = require('koa-send');
+var route = require('koa-route');
+var path = require('path');
+var views = require("co-views");
+
+var render = views(__dirname+"/public",{ map: { html: 'underscore', js: "js" }});
 
 //They take the data from your http POST and parse it into a more usable state
 app.use(require('koa-cors')({
@@ -8,9 +14,14 @@ app.use(require('koa-cors')({
  }));
 
 
+
 app.use(function *(next){
   try
     {
+    console.log("1"); 
+    /*if('GET' == this.method){
+    	return "HI"
+    }	*/
     yield next; 
     //pass on the execution to downstream middlewares
     } catch (err) 
@@ -24,8 +35,30 @@ app.use(function *(next){
     }
 });
 
-app.use(function *(){
+
+/*app.use(route.get('/home',function *(){
+  console.log("2,home");	
+  this.body = 'Welcome to PPL';
+}));*/
+
+
+/*app.use(function *(){
+  console.log("2");	
+  this.body = 'Welcome to PPL';
+});*/
+
+/*app.use(function *(){
+  console.log("2>>>>>>");	
   yield send(this, this.path, { root: __dirname + '/public' });
+})*/
+
+app.use(function *(){
+   if ('/'  == this.path || '/test' == this.path)  {
+     return this.body = yield render("index.html");
+   }
+   else {
+     yield send(this, this.path, { root: __dirname+"/public"});
+   }
 })
 
 app.listen(8000);
