@@ -54,19 +54,85 @@
 </div>
 <div class="container">
   <div class="content">
+
     <div class="content_rgt">
-    <div class="login_sec">
-    <h1>Log In</h1>
-    <ul>
-    <li><span>Email-ID</span><input type="text" placeholder="Enter your email"></li>
-    <li><span>Password</span><input type="text" placeholder="Enter your password"></li>
-    <li><input type="checkbox">Remember Me</li>
-    <li><input type="submit" value="Log In"><a href="">Forgot Password</a></li>
-    </ul>
-    <div class="addtnal_acnt">I do not have any account yet.<a href="">Create My Account Now !</a></div>
+     <form target='_blank'  ng-submit="validateLogin()" name="login" novalidate>
+      <div class="login_sec">
+       <h1>Log In</h1>
+       <ul>
+        <li>
+         <span>Email-ID</span>
+         <input type="email" name="email" ng-model="loginData.email" placeholder="e.g.,hellman@gmail.com" required>
+         <label class="item item-input" style="color:red" ng-show="login.email.$dirty && login.email.$invalid">
+            <span>
+                <span ng-show="login.email.$error.required">This can not be blank</span>
+                <span ng-show="login.email.$error.email">This is not a valid email address.
+                </span>
+            </span>   
+         </label>  
+        </li>
+        <li>
+          <span>Password</span>
+          <input type="password" placeholder="Enter your password" name="password" ng-model="loginData.password" required>
+           <label class="item item-input" style="color:red" ng-show="login.password.$dirty && login.password.$invalid">
+            <span class="item item-input" style="color:red" ng-show="login.password.$error.required">  
+                 This can not be blank
+            </span>
+          </label> 
+        </li>
+        <!-- <li><input type="checkbox">Remember Me</li> -->
+        <li>
+           <input type="checkbox" ng-model="loginData.rememberme" name="rememberme" value="true" required >
+             Remember Me
+           <label>  
+           <span style="color:red" ng-show="login.rememberme.$error.required && checkbox.buttonClicked">Please select the Checkbox before submit</span>
+           </label>
+        </li>
+        <li style="color:red" ng-show="options.showError">
+           <label><span>{{options.ErrorMessage}}</span></label>
+        </li>
+        <li>
+         <input type="submit" ng-disabled="login.email.$dirty && login.email.$invalid || login.rememberme.$dirty && login.rememberme.$invalid" value="Log In">
+         <a ui-sref="forgetpassword">Forgot Password</a>
+        </li>
+       </ul>
+       <div class="addtnal_acnt">I do not have any account yet.<a ui-sref="register">Create My Account Now !</a>
+      </div>
+      </div>
+     </form>
     </div>
-    
-    </div>
+
+    <!-- <form target='_blank' class="loginForm" ng-submit="validateLogin()" name="login" novalidate>
+                    <div class="list">
+                        <label class="item item-input">
+            
+                          <input type="email" name="email" ng-model="loginData.username" placeholder="e.g.,hellman@gmail.com" required>
+                        </label> 
+                       
+                        <label class="item item-input" ng-show="login.email.$dirty && login.email.$invalid">
+                         <span style="color:red">
+                          <span ng-show="login.email.$error.required">This can not be blank</span>
+                           <span ng-show="login.email.$error.email">This is not a valid email address.
+                           </span>
+                          </span>   
+                        </label>           
+                        <l
+                            <input type="password" placeholder="Password" ng-model="loginData.password" required>
+                        </label>
+                        <label class="item item-input" style="color:red" ng-show="options.showError">
+                            <span>{{options.ErrorMessage}}</span>
+                        </label>
+                        <label class="item">
+                            <button class="button button-block button-positive" 
+                            type="submit"  ng-disabled="login.email.$dirty && login.email.$invalid" ng-cloak>
+                                Log In
+                            </button>
+                        </label> 
+                                       
+                    </div>
+                </form> -->
+
+
     <div class="content_lft">
     <h1>Welcome from PPL!</h1>
     <p class="discrptn">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. </p>

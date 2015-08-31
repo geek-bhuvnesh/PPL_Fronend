@@ -612,3 +612,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb02f', end
 .footr_rgt ul li:last-child {
 	margin-right: 0%;
 }
+
+.login_sec ul li label span {
+	  color: red;
+}
