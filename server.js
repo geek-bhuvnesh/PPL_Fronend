@@ -18,8 +18,8 @@ app.use(require('koa-cors')({
 app.use(function *(next){
   try
     {
-    console.log("1"); 
-    /*if('GET' == this.method){
+    /*console.log("1"); 
+    if('GET' == this.method){
     	return "HI"
     }	*/
     yield next; 
