@@ -26,7 +26,7 @@ PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 		templateUrl:'screens/forgetpassword/forget.html',
 		controller:'ForgetPasswordController'
 	}).state('resetpassword',{
-		url:'/resetpassword',
+		url:'/resetpassword/:email/:reset_pass_token',
 		templateUrl:'screens/resetpassword/reset.html',
 		controller:'ResetPasswordController'
 	}).state('post',{

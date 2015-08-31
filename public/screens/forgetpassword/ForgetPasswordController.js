@@ -22,7 +22,7 @@ PPL_Frontend.controller('ForgetPasswordController',['$scope','$http','$state','$
     
     console.log("ForgetPassword is called");
 
-	var email = $sanitize($scope.forgetPassword.email);
+	 var email = $sanitize($scope.forgetPassword.email);
 
     if(email) {
   	forgetPwdData.forgetPasswordFn(email).then(function(data){
