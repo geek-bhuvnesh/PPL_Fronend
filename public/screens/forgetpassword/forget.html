@@ -1,10 +1,36 @@
 
-<div class="popup_sec" id="pop_forgt">
-<div class="clos_btn"><img src="images/clos.png"  alt="" id="clos_pop"/></div>
+<script>
+$(document).ready(function() {
+  $('#rght_cat_bg').click(function() {
+      $('.rght_list').toggle("slide");
+  });
+});
+</script>
+<script>
+$(document).ready(function() {
+  $('#opn_cat_bg').click(function() {
+      $('.sub_dwn').toggle("slide");
+  });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+  $('#clos_pop').click(function() {
+      $('#pop_forgt').toggle("slide");
+  });
+});
+</script>
+
+
+
+
+<div class="popup_sec" ng-show="forgetPassword.popUp">
+<div class="clos_btn"><img src="images/clos.png"  alt="" ng-click="closePopUP();"></div>
 <div class="pop_hdr">A mail has been send to your e-mail Id for Reset Password Link</div>
 <div class="man_contnt">
-<span>Please Check Your Mail Box!</span>
-<input type="submit" value="Ok">
+  <span>Please Check Your Mail Box!</span>
+  <input type="submit" value="Ok" ng-click="OK();">
 </div>
 </div>
 
@@ -64,15 +90,28 @@
 <div class="container">
   <div class="content">
     <div class="content_rgt">
-    <div class="register_sec">
-    <h1>Forgot Password</h1>
-    <ul>
-    <li><span>Enter E-mail ID</span><input type="text" placeholder="User@gmail.com"></li>
-    <li><input type="submit" value="Submit"></li>
-    </ul>
+      <form target='_blank' ng-submit="forgetPassword()" name="forgetpassword" novalidate>
+       <div class="register_sec">
+        <h1>Forgot Password</h1>
+        <ul>
+         <li>
+           <span>Enter E-mail ID</span>
+           <input type="email" placeholder="User@gmail.com" name="email" ng-model="forgetPassword.email" required>
+           <label class="item item-input" ng-show="forgetpassword.email.$dirty && forgetpassword.email.$invalid">
+           <span style="color:red">
+            <span ng-show="forgetpassword.email.$error.required">This can not be blank</span>
+              <span ng-show="forgetpassword.email.$error.email">This is not a valid email address.        </span>
+            </span>   
+          </label>
+         </li>
+         <li>
+           <input type="submit" ng-disabled="login.email.$dirty && login.email.$invalid" value="Submit">
+         </li>
+        </ul>
+       </div>
+      </form> 
     </div>
-    
-    </div>
+
     <div class="content_lft">
     <h1>Welcome from PPL!</h1>
     <p class="discrptn">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. </p>
