@@ -36,7 +36,7 @@ PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 	})
 
     $httpProvider.defaults.withCredentials = true;
-    $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise('/login');
 });
 
 
