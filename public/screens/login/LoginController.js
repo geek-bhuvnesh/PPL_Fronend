@@ -18,7 +18,7 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
     	buttonClicked :false
     }	
 
-	if(localstorageFactory.getVerified("verifiedUser")) {
+	/*if(localstorageFactory.getVerified("verifiedUser")) {*/
 
 	  $scope.validateLogin = function () {
 	  console.log("Inside validate Login method:");	
@@ -42,12 +42,22 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
            
             LoginDataService.fetchLoginData(userLoginData).then(function (data) {
                 console.log("Data Login:" + JSON.stringify(data));
-                localstorageFactory.setUserData('userData',data)
-                $state.go('home');
+                console.log(">:" + data.verified);
+                console.log("> type:" + typeof data.verified);
+                if(data.verified == "true"){
+                   $scope.options.showError = false;
+                   localstorageFactory.setUserData('userData',data)
+                   $state.go('home');
+                } else {
+                   $scope.options.showError = true;
+                   console.log("email address is not valid:");
+                   $scope.options["ErrorMessage"] = "User is not verified,please verify before login";
+                }  
+               
             },function (err) {
                $scope.options.showError = true;
                console.log("err:",err);
-               $scope.options["ErrorMessage"] = "Username or Password wrong";
+               $scope.options["ErrorMessage"] = err.data;
             })
 
         }
@@ -60,11 +70,7 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
 
      }       //close validateLogin function 
    
-    } else {
-		$scope.options.showError = true;
-        console.log("email address is not valid:");
-        $scope.options["ErrorMessage"] = "User is not verified,please verify befor login";
-	}
+  
    
 
 }])
