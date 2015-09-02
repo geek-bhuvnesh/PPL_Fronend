@@ -29,7 +29,7 @@
     </div>
   </div>
 </div>
-<div class="header">
+<div class="header_home">
   <div class="header_lft">
     <div class="logo"><a href="#"><img src="images/logo.png"></a></div>
     <div class="navigatn">
@@ -44,12 +44,33 @@
   </div>
   <div class="header_rgt">
     <div class="flag_div"><img src="images/flag.png"></div>
-    <input type="text" placeholder="Search" class="txt_box">
-    <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
-    <div class="info_div">
-      <div class="image_div"> <img src="images/pic.png"> </div>
-      <div class="info_div1">Me</div>
+    <input type="text" placeholder="Search" class="txt_box" style="margin-left: 2%;width: 200px;">
+    <!-- <div class="msg_box"><a ng-click="logout();"><span class="msg_count">100</span></a></div> -->
+    <!-- showed if user login -->
+    <div class="info_div_home" ng-show="User_logged_in">
+      <div class="image_div"> 
+        <img src="images/pic.png"> 
+      </div>
+      <!-- <div class="info_div1">Me</div> -->
+      <!-- <div class="info_div1"> -->
+        <div class="dropdown dropdown_home">
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"> 
+           {{userData.username}}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a>My Profile</a></li>
+            <li><a>change password</a></li>
+            <li><a  ng-click="logout();">Logout</a></li>
+          </ul>
+        </div>
+      <!-- </div> -->
     </div>
+    <!-- showed if user is not Logged in -->
+    <div class="info_div_home" ng-hide="User_logged_in">
+      <div class="info_div_login_home" ui-sref="login">Login</div>
+    </div>
+    
+
   </div>
 </div>
 <div class="container">

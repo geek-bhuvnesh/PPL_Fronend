@@ -54,6 +54,10 @@ PPL_Frontend.factory('localstorageFactory', ['$window', function($window) {
     },
     getUserData: function(key) {
       return JSON.parse($window.localStorage[key] || '{}');
+    },
+    removeUser : function(key){
+      console.log("key:",key);
+      return $window.localStorage.clear();
     }
   }
 }]);

@@ -147,6 +147,7 @@ h1, h2, h3, h4, h5, h6, ul, img, a, p {
 	float: right;
 	width: 21%;
 }
+
 .image_div {
 	float: left;
 	border-radius: 22px;
@@ -615,4 +616,34 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb02f', end
 
 .login_sec ul li label span {
 	  color: red;
+}
+
+.info_div_home {
+   float: left;
+   margin-left: 10px;
+}
+
+.dropdown_home {
+   float: left;
+   margin-left: 10px;
+   margin-top: 8px;
+   background-color: #ffa21d;
+}
+.header_home{
+   float: left;
+   width: 95%;
+   padding: 0% 5% 0% 5%;
+   height: 66px;
+   background-color: #ffa21d;
+}
+.info_div_login_home {
+   float: right;
+   width: 37%;
+   color: #FFF;
+   margin-top: 15%;
+   font-size: 20px;
+   text-align: left;
+   background-repeat: no-repeat;
+   background-position: right;
+   cursor: pointer;
 }
