@@ -509,6 +509,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffb02f', end
 	background: #f2f3f2;
 	border-left: 1px solid #c2c4c2;
 	border-right: 1px solid #c2c4c2;
+	margin: 0px 0px 0px 0px;
 }
 .rght_list ul {
 	padding: 0px;
@@ -693,4 +694,9 @@ input[type="text"] {
 .list_icon img {
 	width: 39px;
 	height:39px;
+}
+
+.post_list ul li a{
+    cursor: pointer;
+    text-decoration: none;
 }

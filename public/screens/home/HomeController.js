@@ -145,7 +145,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
     console.log("<<<<<<<<<<<<<<<<<<<",$scope.userData);
     if(!$scope.userData.email){
       alert("You are not logged in,please first login");
-      $state.go('login');
+      //$state.go('login');
     } else {  
 
      console.log("upload post function:");
@@ -254,6 +254,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
           console.log("$scope.postData:" +JSON.stringify($scope.postData));
           HomeDataService.createPost($scope.postData).then(function(data){
             console.log("Post Data:" + JSON.stringify(data));
+            $scope.catgoryMessage.showMess = false;
 
             //var timestamp1 = new Date(data.postedOn)
             /*var filterdatetime = $filter('date')(data.postedOn);
