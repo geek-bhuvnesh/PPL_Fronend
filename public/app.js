@@ -1,4 +1,4 @@
-var PPL_Frontend = angular.module('PPLFrontend',['ui.router','ngSanitize','ngResource']);
+var PPL_Frontend = angular.module('PPLFrontend',['ui.router','ngSanitize','ngResource','ngDialog','ngFileUpload','angularFileUpload','angularMoment','infinite-scroll']);
 
 PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 
@@ -11,13 +11,13 @@ PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 		templateUrl:'screens/register/register.html',
 		controller:'RegisterController'
 	}).state('verifyloading', {
-        url: '/verifyloading',
-        templateUrl: 'screens/verify/verifyloading.html'
-    }).state('verifyuseremail', {
-        url: '/verifyuseremail/:email/:verification_code',
-        templateUrl: 'screens/verify/verify-email.html',
-        controller: 'VerifyController'
-    }).state('login',{
+    url: '/verifyloading',
+    templateUrl: 'screens/verify/verifyloading.html'
+  }).state('verifyuseremail', {
+    url: '/verifyuseremail/:email/:verification_code',
+    templateUrl: 'screens/verify/verify-email.html',
+    controller: 'VerifyController'
+  }).state('login',{
 		url:'/login',
 		templateUrl:'screens/login/login.html',
 		controller:'LoginController'
@@ -36,7 +36,7 @@ PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 	})
 
     $httpProvider.defaults.withCredentials = true;
-    $urlRouterProvider.otherwise('/login');
+    $urlRouterProvider.otherwise('/home');
 });
 
 

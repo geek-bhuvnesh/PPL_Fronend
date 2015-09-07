@@ -1,3 +1,11 @@
+<div class="popup_sec" ng-show="options.popUp">
+<!-- <div class="clos_btn"><img src="images/clos.png"  alt="" ng-click="closePopUP();"></div> -->
+<div class="pop_hdr">Your Password has been reset</div>
+<div class="man_contnt">
+  <span>Please Login</span>
+  <input type="submit" value="Ok" ng-click="OK();">
+</div>
+</div>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
@@ -63,16 +71,26 @@
         <li>
          <span>Enter New Password</span>
          <input type="password" name="password" placeholder="Enter your new password" ng-model="reset.password" required>
+         <label class="item item-input" style="color:red" ng-show="resetpassword.password.$dirty && resetpassword.password.$invalid">
+            <span  style="color:red" ng-show="resetpassword.password.$error.required">  
+                New Password can not be blank
+            </span>
+          </label> 
         </li>
         <li>
          <span>Confirm Password</span>
          <input type="password" name="confirmpassword" placeholder="Enter your password again" ng-model="reset.confirm_password" required>
+         <label class="item item-input" style="color:red" ng-show="resetpassword.confirmpassword.$dirty && resetpassword.confirmpassword.$invalid">
+            <span class="item item-input" style="color:red" ng-show="resetpassword.confirmpassword.$error.required">  
+                Confirm Password can not be blank
+            </span>
+          </label> 
         </li>
-        <li style="color:red" ng-show="options.showError">
+        <li style="color:red;font-size: 16px;" ng-show="options.showError">
           {{options.ErrorMessage}}
         </li>
         <li>
-         <input type="submit" value="Submit">
+         <input type="submit" ng-disabled="resetpassword.password.$dirty && resetpassword.password.$invalid || resetpassword.confirmpassword.$dirty && resetpassword.confirmpassword.$invalid" value="Submit">
         </li>
        </ul>
       </div>

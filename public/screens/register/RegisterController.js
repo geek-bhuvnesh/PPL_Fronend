@@ -6,6 +6,7 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
         "lastname" : "",
         "email" : "",
         "password" : "",
+        "confirmPassword" :"",
         "termsagreement" :""
     };
     $scope.options = {
@@ -32,31 +33,38 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
 
 
         if(!validator.isByteLength($scope.loginData.firstname,3,10)){
-          //alert("User Name must contain 3 charatcer and Max 10 char:");
           console.log("1");
+          //alert("User Name must contain 3 charatcer and Max 10 char:");
           $scope.options.showError = true;
-          $scope.options.errorMessage = "First Name must contain 3 charatcer and Max 10 char:";
+          $scope.options.ErrorMessage = "First Name must contain 3 charatcer and Max 10 char:";
           return;
         }
         
         if(!validator.isEmail($scope.loginData.email)){
           console.log("2");
           $scope.options.showError = true;
-          $scope.options.errorMessage = "Please Enter valid Email:";
+          $scope.options.ErrorMessage = "Please Enter valid Email:";
           return;
         }
         if(!$scope.loginData.termsagreement){
-          console.log("0");
+          console.log("3");
           $scope.checkbox.buttonClicked = true;
           return;
         } 
-        if ($scope.loginData.password != $scope.loginData.confirmPassword) {
-        	console.log("3");
-            alert("These passwords don't match. Try again");
-        } else if ($scope.loginData.password.length < 8) {
-            alert("password must contain more than 8 charachters:")
-        }else {
+        if ($scope.loginData.password.length < 8) {
           console.log("4");
+          $scope.options.showError = true;
+          $scope.options.ErrorMessage = "password must contain more than 8 charachters:";
+          return;
+        }  
+        if($scope.loginData.password != $scope.loginData.confirmPassword) {
+          console.log("5");
+          $scope.options.showError = true;
+          $scope.options.ErrorMessage = "These passwords don't match. Try again:";
+          return;
+        }  
+        else {
+          console.log("6");
           $scope.signUpDetails = {
           	    firstname : $scope.loginData.firstname,
                 lastname: $scope.loginData.lastname,
@@ -74,9 +82,9 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
             $state.go('login');
             
            },function(err){
-            if (err.status == 400) {
-             $scope.passwordErrorMessage = err.data;
-          }
+             console.log("err.data:",err.data);
+             $scope.options.showError = true; 
+             $scope.options.ErrorMessage = err.data;
          })
         }
 

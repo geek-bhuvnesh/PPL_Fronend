@@ -79,7 +79,7 @@
               <input type="email" name="email" placeholder="e.g.,hellman@gmail.com" ng-model="loginData.email" required>
               <label class="item item-input" ng-show="register.email.$dirty && register.email.$invalid">  
                  <span style="color:red">
-                 <span ng-show="register.email.$error.required">This can not be blank</span>
+                 <span ng-show="register.email.$error.required">Email id can not be blank</span>
                  <span ng-show="register.email.$error.email">This is not a valid email address.</span>
                  </span>
               </label> 
@@ -89,16 +89,16 @@
               <input type="password" name="password" placeholder="Enter your password" ng-model="loginData.password" required >
               <label class="item item-input" style="color:red" ng-show="register.password.$dirty && register.password.$invalid">
               <span class="item item-input" style="color:red" ng-show="register.password.$error.required">  
-                 This can not be blank
+                 Password can not be blank
               </span>
               </label> 
            </li>
            <li>
               <span>Confirm Password</span>
-              <input type="password" name="confirmPassword" placeholder="Enter your password" ng-model="loginData.confirmPassword">
+              <input type="password" name="confirmPassword" placeholder="Enter your password Again" ng-model="loginData.confirmPassword" required>
               <label class="item item-input" style="color:red" ng-show="register.confirmPassword.$dirty && register.confirmPassword.$invalid">
               <span class="item item-input" style="color:red" ng-show="register.confirmPassword.$error.required">  
-                 This can not be blank
+                 Confirm Password can not be blank
               </span>
               </label>
            </li>
@@ -108,8 +108,11 @@
            <!-- <span style="color:red" ng-show="options.showError">Please select the Checkbox before submit</span>   -->
            <label><span style="color:red" ng-show="register.termsagreement.$error.required && checkbox.buttonClicked">Please select the Checkbox before submit</span></label>
            </li>
+           <div style="color:red" ng-show="options.showError">
+               <label><span>{{options.ErrorMessage}}</span></label>
+           </div>
            <li><input  ng-disabled="register.firstname.$dirty &&  register.firstname.$invalid ||
-          register.email.$dirty && register.email.$invalid || register.termsagreement.$dirty &&  register.termsagreement.$invalid" type="submit" value="Register"></li>
+          register.email.$dirty && register.email.$invalid || register.termsagreement.$dirty &&  register.termsagreement.$invalid || register.password.$dirty && register.password.$invalid ||register.confirmPassword.$dirty && register.confirmPassword.$invalid" type="submit" value="Register"></li>
           </ul>
         <div class="addtnal_acnt">I already have an account.<a ui-sref="login">Login My Account !</a>
         </div>

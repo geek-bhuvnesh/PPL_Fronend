@@ -5,12 +5,17 @@ PPL_Frontend.controller('ForgetPasswordController',['$scope','$http','$state','$
         "email" : "",
         "popUp" : false
     };
+
+    $scope.options = {
+     ErrorMessage :"",
+     showError : false
+   }
    
     $scope.OK = function(){
       
        $timeout(function() {
             $state.go('login');
-       },2000);
+       },1000);
 
     }
 
@@ -18,9 +23,9 @@ PPL_Frontend.controller('ForgetPasswordController',['$scope','$http','$state','$
     	$scope.forgetPassword.popUp = false;
     }
 
-    $scope.forgetPassword = function() {
-    
-    console.log("ForgetPassword is called");
+   $scope.forgetPassword = function() {
+    $scope.options.showError = false;
+   console.log("ForgetPassword is called");
 
 	 var email = $sanitize($scope.forgetPassword.email);
 
@@ -30,10 +35,12 @@ PPL_Frontend.controller('ForgetPasswordController',['$scope','$http','$state','$
        $scope.forgetPassword.popUp = true;
 
       },function(err){
-        $scope.errorMessage = err.data;
+        $scope.options.showError = true;
+        $scope.options.ErrorMessage = err.data;
       })
     } else {
-      $scope.errorMessage = 'Please enter a valid Emailid';
+      $scope.options.showError = true;
+      $scope.options.ErrorMessage = 'Please enter a valid Emailid';
     } 
   } 
      

@@ -1,0 +1,177 @@
+<style>
+    .dialog-list-style {
+        list-style-type: disc;
+        padding-top: 5px;
+        padding-left: 25px;
+        font-size: 16px;
+    }
+
+    .ngdialog-content {
+        padding-bottom: 1em !important;
+    }
+    .pop_up {
+        left: 32%;
+        top: 40%;
+        position: absolute;
+        right: 32%;
+        bottom: 40%;
+        width: 36%;
+    }
+
+ .topDiv{
+      position: absolute;
+      width: 38%;
+      left: 30%;
+      top: 5%;
+      background: white;
+      border: 1px solid antiquewhite;
+ }
+
+.ngdialog-close:before {
+   background: 0 0;
+   color: #bbb;
+   content: "\00D7";
+   font-size: 26px;
+   font-weight: 400;
+   height: 30px;
+   line-height: 26px;
+   position: absolute;
+   right: 0;
+   text-align: center;
+   top: -5px;
+   width: 20px;
+}
+/*.float{
+    float:left;
+}*/
+.clear{
+    clear:both;
+}
+
+.inputBox{
+  height: 35px;
+  width: 450px;
+}
+.headertext{
+  font-size: 16px;  
+}
+.ngdialog-content {
+  padding-bottom: 0 !important; 
+}
+.buttonPost{
+  text-align: center;
+  font-size: 20px;
+  background: #ffa21d;
+  padding: 10px;
+}
+
+.ngdialog-close:before {
+  background: 0 0;
+  color: #bbb;
+  content: "\00D7";
+  font-size: 30px;
+  font-weight: 400;
+  height: 30px;
+  line-height: 26px;
+  position: absolute;
+  right: 20px;
+  text-align: center;
+  top: 15px;
+  width: 20px;
+}
+div>h4{
+  color: white;
+  font-size: 25px;
+}
+.postImage img{
+  width:470px;
+  height:130px;
+}
+#header{
+  text-align: center;
+  background: #ffa21d;
+  padding: 15px;
+  height: 60px;
+}
+ button b{
+  color:white;
+}
+
+div select{
+  width: 450px;
+}
+</style>
+
+<div class="topDiv">
+
+ <form name="post_form" novalidate>
+
+  <div class="col-xs-12 center">
+ <!-- <div class="ngdialog-message pop_up "> -->
+    
+    <div id="header"><h4><b> New Post</b></h4></div>
+   <!--  <div ng-click="cancelUploadPost()" style="font-size: 25px; cursor:pointer;float: right;color: #8c8c8c;"> X </div>
+ -->
+   <div style="padding: 15px;">
+    <div>
+      <div class="headertext">Title</div>
+      <div>
+           <input autofocus="false" type="text" name="title" placeholder="e.g.,First Post" ng-model="post.postTitle" class="inputBox" autocomplete="false" required>
+           <label class="item item-input" ng-show="post_form.title.$dirty && post_form.title.$invalid">
+                <span style="color:red">
+                <span ng-show="post_form.title.$error.required">Title cannot be a blank</span>
+                </span>
+           </label> 
+      </div>
+    </div> 
+    <div>
+      <div class="headertext">Category</div>
+      <div>
+          <!--  <input autofocus="autofocus" type="text" name="catType" placeholder="e.g.,Cats" ng-model="post.catType" class="inputBox"> -->
+          <select ng-model="selectedCategoryData" ng-options="category.catName for category in categories">
+          </select>
+      </div>
+    </div> 
+   <!--  <div style="padding:5px 0;"> 
+      <span class="headertext">Creator Image </span> 
+      <span class="user_img">
+       <img src="images/bhuvnesh_image_first.jpg">
+       <input type="file" ng-model="file" ng-file-select="onFileSelect($files)" multiple accept="image/*"><br><br>
+       </span> 
+    </div>
+
+    <div style="padding:5px 0;">  
+       <span class="headertext">Creator Name </span>
+            <span ng-bind="post.creatorName" style="font-size: 16px;"></span>
+    </div> -->
+    
+    <!-- <div>
+       <div class="headertext">Posted On </div>
+       <div>
+        <input type="text" name="posted_on" ng-model="post.postedOn" class="inputBox">
+       </div>
+    </div> 
+ -->
+    <div>
+       <div class="headertext">Image</div>   
+       <div class="postImage">
+       <!--  <img src="images/lft_img.png"> -->
+        <!-- <img ng-src="{{post.postImage}}"> -->
+        <!-- <input type="file" ng-model="file" name="file" ngf-select="upload($file)"> -->
+ 
+        <!-- <div class="button" ng-model="file" ngf-select="upload($file)"> </div> -->
+        <img ng-src="{{url}}/{{post.postImage}}" ng-show="showPostimage">
+        <input type="file" ng-model="file" ngf-select="upload($files)" multiple="multiple"><br><br>
+       </div> 
+    </div>
+    <div style="color:red" ng-show="options.showError">
+          <label><span>{{options.ErrorMessage}}</span></label>
+    </div>
+    <div style="text-align:center;"> 
+       <button  ng-disabled="post_form.title.$dirty && post_form.title.$invalid" class="buttonPost" type="button" value="Submit" ng-click="submitPost();"><b>Submit </b></button>  
+    </div>
+ </div>
+   </div>
+  </form>
+
+

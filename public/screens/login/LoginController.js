@@ -55,8 +55,8 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
                 }  
                
             },function (err) {
-               $scope.options.showError = true;
                console.log("err:",err);
+               $scope.options.showError = true;
                $scope.options["ErrorMessage"] = err.data;
             })
 

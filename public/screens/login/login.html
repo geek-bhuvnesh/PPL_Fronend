@@ -45,11 +45,11 @@
   <div class="header_rgt">
     <div class="flag_div"><img src="images/flag.png"></div>
     <input type="text" placeholder="Search" class="txt_box">
-    <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
+    <!-- <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
     <div class="info_div">
       <div class="image_div"> <img src="images/pic.png"> </div>
       <div class="info_div1">Me</div>
-    </div>
+    </div> -->
   </div>
 </div>
 <div class="container">
@@ -62,10 +62,10 @@
        <ul>
         <li>
          <span>Email-ID</span>
-         <input type="email" name="email" ng-model="loginData.email" placeholder="e.g.,hellman@gmail.com" required>
+         <input type="email" name="email" ng-model="loginData.email" placeholder="e.g.,hellman@gmail.com"  autofocus="false" autocomplete="off"  required>
          <label class="item item-input" style="color:red" ng-show="login.email.$dirty && login.email.$invalid">
             <span>
-                <span ng-show="login.email.$error.required">This can not be blank</span>
+                <span ng-show="login.email.$error.required">Email Id can not be blank</span>
                 <span ng-show="login.email.$error.email">This is not a valid email address.
                 </span>
             </span>   
@@ -76,7 +76,7 @@
           <input type="password" placeholder="Enter your password" name="password" ng-model="loginData.password" required>
            <label class="item item-input" style="color:red" ng-show="login.password.$dirty && login.password.$invalid">
             <span class="item item-input" style="color:red" ng-show="login.password.$error.required">  
-                 This can not be blank
+                 Password can not be blank
             </span>
           </label> 
         </li>
@@ -92,7 +92,7 @@
            <label><span>{{options.ErrorMessage}}</span></label>
         </li>
         <li>
-         <input type="submit" ng-disabled="login.email.$dirty && login.email.$invalid || login.rememberme.$dirty && login.rememberme.$invalid" value="Log In">
+         <input type="submit" ng-disabled="login.email.$dirty && login.email.$invalid || login.rememberme.$dirty && login.rememberme.$invalid ||login.password.$dirty && login.password.$invalid" value="Log In">
          <a ui-sref="forgetpassword">Forgot Password</a>
         </li>
        </ul>
