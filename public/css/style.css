@@ -689,3 +689,8 @@ input[type="text"] {
 	/* color: #A0A0A0; */
    font-size: 14px;
 }
+
+.list_icon img {
+	width: 39px;
+	height:39px;
+}
