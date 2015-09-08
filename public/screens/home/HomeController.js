@@ -2,7 +2,6 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  console.log("Inside Controller");
 	
 
-
  $scope.options = {
      ErrorMessage :"",
      showError : false
@@ -23,31 +22,31 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  $scope.tempArray = [];
  //Get All posts
  HomeDataService.getAllPosts().then(function(data){
-   console.log("Posts Data in Home Controller:" + JSON.stringify(data));
-   $scope.posts = data.reverse();
-  /* var filterdatetime = $filter('date')($scope.posts[0].postedOn);
+   console.log("Posts Data in Home Controller before:" + JSON.stringify(data));
 
-   alert("filterdatetime:" +filterdatetime);*/
-   console.log("--------------");
+   data.forEach(function(obj){
+    var index =  data.indexOf(obj);
+    var tempObj ={};
+    if(obj.likeby.indexOf($scope.userData._id)>-1){
+      obj["likeOrUnlike"] = "Unlike";
+      tempObj = obj;
+      data.splice(index, 1, tempObj);
+  
+    } else {
+      obj["likeOrUnlike"] = "Likes";
+      tempObj = obj;
+      data.splice(index, 1, tempObj);
+    }
+   
+   })
+   $scope.posts = data.reverse();
    $scope.tempArray = $scope.posts;
-   console.log("$scope.post in Home controller" +JSON.stringify($scope.posts));
  },function(err){
    console.log("error:",err);
    $scope.options.showError = true;
    $scope.options.ErrorMessage = err.message
  })
 
-    /*$scope.postsArray = [];
-    $scope.counter = 0;
-
-    $scope.loadMore = function () {
-        console.log("loadMore:");
-        for (var i = 0; i < 5; i++) {
-            $scope.postsArray.push($scope.posts[i]);
-        };
-       console.log("$scope.postsArray:" + JSON.stringify($scope.postsArray)); 
-    }*/
-    //$scope.loadMore();
  
  //Get All category
  HomeDataService.getAllCategories().then(function(data){
@@ -93,7 +92,6 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
    $scope.catgoryMessage.showMess = false;
    console.log("category:",category);
   if(category =="Latest First") {
-    console.log("latest >>>>>>>>>>>" + JSON.stringify($scope.tempArray));
     $scope.posts = [];
     var temp_catgory_array =[];
     temp_catgory_array = $scope.tempArray;
@@ -117,18 +115,13 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
   } else{
     console.log("$scope.post in inside category click--------------" +JSON.stringify($scope.tempArray));
-   //var categoryPost =[];
     $scope.posts = [];
     if(category =="ALL"){
       $scope.posts = $scope.tempArray;
     }
     for(var i=0; i<$scope.tempArray.length;i++){
     if($scope.tempArray[i]["catType"]==category){
-      console.log("category,i,$scope.tempArray[i]:",category,i,$scope.tempArray[i])
-      //categoryPost[i] = $scope.tempArray[i];
       $scope.posts.push($scope.tempArray[i]); 
-      console.log("category post,i:" +JSON.stringify($scope.posts),i);
-      console.log("--------------------------------------");
      }
    }
    if($scope.posts.length<1){
@@ -138,6 +131,75 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
   }
 
   }
+
+
+ $scope.likeOrUnlike = function(selectedPost,likeOrUnlike){
+  console.log("selectedPost:" +JSON.stringify(selectedPost));
+  console.log("like or unlike:" +likeOrUnlike);
+
+  if(likeOrUnlike =="Likes"){
+    $scope.likeDetails ={};
+    $scope.likeDetails.postid = selectedPost._id,
+    $scope.likeDetails.likeby = $scope.userData._id;
+    console.log("Like details:" +JSON.stringify($scope.likeDetails));
+
+    HomeDataService.likeUpdate($scope.likeDetails).then(function(data){
+    console.log("Like Data success:" +JSON.stringify(data));
+    var index = {};
+    $scope.posts.forEach(function(obj){
+         if(obj._id == data._id){
+             index = $scope.posts.indexOf(obj);
+         }    
+    })
+    var tempObj ={};
+    if(data.likeby.indexOf($scope.likeDetails.likeby)>-1){
+      data["likeOrUnlike"] = "Unlike";
+      tempObj = data;
+      $scope.posts.splice(index, 1, tempObj);
+  
+    } else {
+  
+      data["likeOrUnlike"] = "Likes";
+      tempObj = data;
+      $scope.posts.splice(index, 1, tempObj);
+  
+    }
+
+    },function(err){
+
+    })
+  } else if(likeOrUnlike =="Unlike"){
+    $scope.unlikeDetails ={};
+    $scope.unlikeDetails.postid = selectedPost._id,
+    $scope.unlikeDetails.likeby = $scope.userData._id;
+    console.log("unlike details:" +JSON.stringify($scope.unlikeDetails));
+
+    HomeDataService.unlikeUpdate($scope.unlikeDetails).then(function(data){
+      console.log("Unlike Data success:" +JSON.stringify(data));
+      var index = {};
+      $scope.posts.forEach(function(obj){
+         if(obj._id == data._id){
+             index = $scope.posts.indexOf(obj);
+         }    
+      })
+      var tempObj ={};
+      console.log("index:",index)
+      console.log("tempObj:",tempObj);
+      data["likeOrUnlike"] = "Likes"
+      tempObj = data;
+      $scope.posts.splice(index, 1, tempObj);
+
+    },function(err){
+
+    })  
+
+  }
+
+ }
+
+
+
+
 
  $scope.uploadPost = function () {
      $scope.showPostimage = false;

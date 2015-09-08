@@ -171,10 +171,10 @@
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_001.png" alt="share" /></span>Share</a></li>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_004.png" alt="share" /></span>4 Comments</a></li>
-                <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>Likes</a></li>
-                <div class="like_count" style="margin-right: 10px;"><span class="lft_cnt"></span><span class="mid_cnt">10</span><span class="rit_cnt"></span></div>
-                <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>Unlike</a></li>
-                <div class="like_count"><span class="lft_cnt"></span><span class="mid_cnt">4</span><span class="rit_cnt"></span></div>
+                <li><a ng-click="likeOrUnlike(post,post.likeOrUnlike);"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{post.likeOrUnlike}}</a></li>
+                <div class="like_count" style="margin-right: 10px;"><span class="lft_cnt"></span><span class="mid_cnt">{{post.likecount}}</span><span class="rit_cnt"></span></div>
+              <!--   <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>Unlike</a></li> -->
+             <!--    <div class="like_count"><span class="lft_cnt"></span><span class="mid_cnt">4</span><span class="rit_cnt"></span></div> -->
               </ul>
             </div>
           </div>

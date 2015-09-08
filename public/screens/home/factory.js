@@ -22,10 +22,30 @@ PPL_Frontend.factory("post",["$resource","pplconfig",function($resource,pplconfi
    });
 }]);
 
+PPL_Frontend.factory("like",  ["$resource","pplconfig",function($resource,pplconfig) {
+     return $resource(pplconfig.url+":3000/like/:postid",{ postid: "@postid"},
+      {
+       update: {
+           method: "PUT"
+       }
+   });
+}]);
 
 
-PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post", function($http, $q, logout,allCategories,allposts,post) {
-   var userData = {};
+PPL_Frontend.factory("unlike",  ["$resource","pplconfig",function($resource,pplconfig) {
+     return $resource(pplconfig.url+":3000/unlike/:postid",{ postid: "@postid"},
+      {
+       update: {
+           method: "PUT"
+       }
+   });
+}]);
+
+
+
+PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike", function($http, $q, logout,allCategories,allposts,post,like,unlike) {
+   var userData = {}; 
+   var likeUnlikeData = {};
    var selected;
    return {
        logout: function() {
@@ -110,6 +130,53 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
                defer.reject({});
            }
            return defer.promise;
-       }    
+       },
+      likeUpdate : function(likeData){
+         var defer = $q.defer();
+         console.log("---Like data START factory", likeData)
+           try {
+                like
+                   .update({
+                    "postid":likeData.postid,
+                    "likeby":likeData.likeby
+                   }, function(resp) {
+                       likeUnlikeData = resp;
+                       defer.resolve(likeUnlikeData);
+                   }, function(err) {
+                       likeUnlikeData = {};likeUnlikeData
+                       defer.reject(err);
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               likeUnlikeData = {};
+               defer.reject({});
+           }
+           return defer.promise;         
+       },
+       unlikeUpdate:function(unlikeData){
+         var defer = $q.defer();
+         console.log("---Unlike data START factory", unlikeData)
+           try {
+                unlike
+                   .update({
+                    "postid":unlikeData.postid,
+                    "likeby":unlikeData.likeby
+                   }, function(resp) {
+                       unlikeData = resp;
+                       defer.resolve(unlikeData);
+                   }, function(err) {
+                       unlikeData = {};
+                       defer.reject(err);
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               unlikeData = {};
+               defer.reject({});
+           }
+           return defer.promise;     
+
+       }  
    }
 }]);
