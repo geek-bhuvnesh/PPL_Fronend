@@ -30,11 +30,12 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
             $scope.options.ErrorMessage = "Username(Email Id) and Password are Required:";
             return ;
 
-        } else if(!$scope.loginData.rememberme){
+        } /*else if(!$scope.loginData.rememberme){
           $scope.checkbox.buttonClicked = true;
           return;
 
-        } else {
+        }*/ 
+        else {
 
             $scope.loginData.email = $sanitize($scope.loginData.email);
             $scope.loginData.password = $sanitize($scope.loginData.password);
