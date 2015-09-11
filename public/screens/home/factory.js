@@ -41,11 +41,16 @@ PPL_Frontend.factory("unlike",  ["$resource","pplconfig",function($resource,pplc
    });
 }]);
 
+PPL_Frontend.factory("getPost", ["$resource","pplconfig",function($resource,pplconfig) {
+    return $resource(pplconfig.url+":3000/getPost/:postid", {
+       postid: '@postid',
+   }, {});
+}]);
 
-
-PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike", function($http, $q, logout,allCategories,allposts,post,like,unlike) {
+PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost) {
    var userData = {}; 
    var likeUnlikeData = {};
+   var postData = {};
    var selected;
    return {
        logout: function() {
@@ -177,6 +182,27 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
            }
            return defer.promise;     
 
+       },
+       getSinglePost: function(postid) {
+           console.log("Logout factory");
+           var defer = $q.defer();
+           try {
+               getPost
+                   .get({
+                       postid: postid,
+                   },function(resp) {
+                      postData = resp;
+                      defer.resolve(resp);
+                   },function(err) {
+                       postData = {};
+                       defer.reject({});
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               defer.reject({});
+           }
+           return defer.promise;
        }  
    }
 }]);

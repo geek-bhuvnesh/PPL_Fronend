@@ -29,7 +29,7 @@
     </div>
   </div>
 </div>
-<div class="header">
+<div class="header_home">
   <div class="header_lft">
     <div class="logo"><a href="#"><img src="images/logo.png"></a></div>
     <div class="navigatn">
@@ -45,10 +45,26 @@
   <div class="header_rgt">
     <div class="flag_div"><img src="images/flag.png"></div>
     <input type="text" placeholder="Search" class="txt_box">
-    <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
-    <div class="info_div">
-      <div class="image_div"> <img src="images/pic.png"> </div>
-      <div class="info_div1">Me</div>
+    <!-- <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div> -->
+    <div class="info_div_home">
+      <!-- <div class="image_div"> <img src="images/pic.png"> </div> -->
+     <!--  <div class="info_div1">Me</div> -->
+      <div class="image_div"> 
+        <img src="images/pic.png"> 
+      </div>
+      <!-- <div class="info_div1">Me</div> -->
+      <!-- <div class="info_div1"> -->
+      <div class="dropdown dropdown_home">
+          <button class="btn btn-primary dropdown-toggle user_name" type="button" data-toggle="dropdown"> 
+           {{userData.username}}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a>My Profile</a></li>
+            <li><a>change password</a></li>
+            <li><a ng-click="logout();">Logout</a></li>
+          </ul>
+      </div>
+
     </div>
   </div>
 </div>
@@ -56,18 +72,21 @@
   <div class="content">
     <div class="content_rgt">
       <div class="rght_btn"> <span class="rght_btn_icon"><img src="images/btn_iconb.png" alt="up" /></span> <span class="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span> <a href="#">Upload Post</a> </div>
-      <div class="rght_btn"> <span class="rght_btn_icon"><img src="images/btn_icona.png" alt="up" /></span> <span class="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span> <a href="#">Invite Friends</a> </div>
-      <div class="rght_cate">
-        <div class="rght_cate_hd" id="rght_cat_bg">Categories</div>
-        <div class="rght_list">
-          <ul>
+     <!--  <div class="rght_btn"> <span class="rght_btn_icon"><img src="images/btn_icona.png" alt="up" /></span> <span class="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span> <a href="#">Invite Friends</a> </div> -->
+     <div class="rght_cate">
+         <div class="rght_cate_hd" id="rght_cat_bg">Categories</div>
+        <div class="rght_list" ng-repeat="category in categoryData track by $index">
+           <ul>
+           <li><a ng-click="filterPosts(category.catName);"><span class="list_icon"><img src="images/{{category.image}}" alt="up" /></span>{{category.catName}}</a></li>
+           </ul>
+          <!--<ul>
             <li><a href="#"><span class="list_icon"><img src="images/icon_01.png" alt="up" /></span> CATS</a></li>
             <li><a href="#"><span class="list_icon"><img src="images/icon_02.png" alt="up" /></span> Dogs</a></li>
             <li><a href="#"><span class="list_icon"><img src="images/icon_03.png" alt="up" /></span> Birds</a></li>
             <li><a href="#"><span class="list_icon"><img src="images/icon_04.png" alt="up" /></span> Rabbit</a></li>
             <li><a href="#"><span class="list_icon"><img src="images/icon_05.png" alt="up" /></span> Others</a></li>
-          </ul>
-        </div>
+          </ul>-->
+        </div> 
       </div>
       <div class="rght_cate">
         <div class="rght_cate_hd" id="opn_cat_bg">Featured</div>
@@ -98,13 +117,14 @@
       
       <div class="contnt_2">
         <div class="div_a">
-          <div class="div_title">User Interface PSD Source files Web Designing for web</div>
+          <div class="div_title">{{postData.postTitle}}</div>
           <div class="btm_rgt">
-              <div class="btm_arc">Cats</div>
+              <div class="btm_arc">{{postData.catType}}</div>
             </div>
           <div class="div_top">
-            <div class="div_top_lft"><img src="images/img_6.png">Steave Waugh</div>
-            <div class="div_top_rgt"><span class="span_date">02 Jan 2014</span><span class="span_time">11:15am</span></div>
+            <div class="div_top_lft"><img src="images/img_6.png">{{postData.postedBy.username}}</div>
+           <!--  <div class="div_top_rgt"><span class="span_date">{{postData.postedOn}}</span><span class="span_time">11:15am</span></div> -->
+            <div class="div_top_rgt"><time>{{postData.postedOn | amDateFormat: 'dddd, MMMM Do YYYY, h:mm a' }}</time></div>
           </div>
           <div class="div_image"><img src="images/lft_img.png" alt="pet" /></div>
           <div class="div_btm">
@@ -112,9 +132,10 @@
               <ul>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_001.png" alt="share" /></span>Share</a></li>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li>
-                 <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>0 Likes</a></li>
+                 <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{postData.likecount}} Likes</a></li>
+                 <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{postData.likeOrUnlike}}</a></li>
+                 
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_004.png" alt="share" /></span>4 Comments</a></li>
-               
                
               
               </ul>
@@ -125,54 +146,35 @@
       </div>
       <div class="contnt_3">
         <ul>
-          <li>
-            <div class="list_image">
-              <div class="image_sec"><img src="images/post_img.png"></div>
-              <div class="image_name">Bharat</div>
-            </div>
-            <div class="list_info">
-            This is an example of a comment. You can create as many comments like this one or sub
-comments as you like and manage all of your content inside your Account.
-            </div>
-            <input type="button" value="Reply" class="orng_btn">
+          <li>      
+           <div class="cmnt_div1">
+             <form target="_blank" ng-submit="addCommentFun()" name="addComment" novalidate>
+              <input type="text" name="comment" placeholder="Write a comment" value="Enter your Comment" class="cmnt_bx1" ng-model="addComment.commentText"
+              style="text-transform: capitalize;" autocomplete="off" required>
+              <label class="item item-input" ng-show="addComment.comment.$dirty && addComment.comment.$invalid">
+                <span style="color:red">
+                <span ng-show="addComment.comment.$error.required">Please Enter Text before Submit</span>
+                </span>
+              </label> 
+              <input type="submit" ng-disabled="addComment.comment.$dirty && addComment.comment.$invalid" class="sub_bttn1" value="Submit Comment">
+           </div>
           </li>
-          <li>
+          <li ng-repeat="comment in postData.comments|limitTo:postsShow">
             <div class="list_image">
               <div class="image_sec"><img src="images/post_img.png"></div>
-              <div class="image_name">Bharat</div>
+              <div class="image_name">{{comment.createdBy.username}}</div>
             </div>
             <div class="list_info">
-            This is an example of a comment. You can create as many comments like this one or sub
-comments as you like and manage all of your content inside your Account.
+             {{comment.commentText}}
             </div>
-            <input type="button" value="Reply" class="black_btn">
+           <!--  <input type="button" value="Reply" class="black_btn">
             <div class="cmnt_div">
               <input type="text" value="Add a Comment" class="cmnt_bx">
               <input type="submit" class="sub_bttn" value="Submit Comment">
-            </div>
-          </li>
-          <li>
-            <div class="list_image">
-              <div class="image_sec"><img src="images/post_img.png"></div>
-              <div class="image_name">Bharat</div>
-            </div>
-            <div class="list_info">
-            This is an example of a comment. You can create as many comments like this one or sub
-comments as you like and manage all of your content inside your Account.
-            </div>
-            <input type="button" value="Reply" class="orng_btn">
-          </li>
-          <li>
-            
-            
-            
-            <div class="cmnt_div1">
-              <input type="text" value="Enter your Comment" class="cmnt_bx1">
-              <input type="submit" class="sub_bttn1" value="Submit Comment">
-            </div>
-          </li>
+            </div> -->
+           </li>
         </ul>
-        <div class="view_div"><a href="#">View more</a></div>
+        <div class="view_div"><a ng-click="viewMore();">View more</a></div>
       
       </div>
     </div>

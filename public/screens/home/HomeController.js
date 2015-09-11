@@ -51,6 +51,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  //Get All category
  HomeDataService.getAllCategories().then(function(data){
   console.log("Catgeory Data in Home Controller:" + JSON.stringify(data));
+  localstorageFactory.setUserData('categoryData',data);
   $scope.categories = data;
 
  },function(err){
@@ -198,7 +199,29 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  }
 
 
+ //single post
 
+ $scope.singlePost = function(postData){
+  console.log("postData:" +JSON.stringify(postData));
+  HomeDataService.getSinglePost(postData._id).then(function(data){
+    console.log("<<<<<<data.likeby:",data.likeby);
+    console.log("<<<<<<$scope.userData._id:",$scope.userData._id);
+    if(data.likeby.indexOf($scope.userData._id)>-1){
+      console.log("1>>>")
+      data["likeOrUnlike"] = "Unlike";
+    } else {
+      console.log("2>>>") 
+      data["likeOrUnlike"] = "Likes";
+    }
+    console.log("Single post data success:" +JSON.stringify(data));
+    localstorageFactory.setPostData('postData',data)
+    $state.go('post');
+
+  },function(err){
+
+  })  
+  
+ }
 
 
  $scope.uploadPost = function () {

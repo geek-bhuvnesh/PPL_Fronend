@@ -44,7 +44,7 @@
   </div>
   <div class="header_rgt">
     <div class="flag_div"><img src="images/flag.png"></div>
-    <input type="text" placeholder="Search" class="txt_box" style="margin-left: 2%;width: 200px;">
+    <input type="text" placeholder="Search" class="txt_box">
     <!-- <div class="msg_box"><a ng-click="logout();"><span class="msg_count">100</span></a></div> -->
     <!-- showed if user login -->
     <div class="info_div_home" ng-show="User_logged_in">
@@ -53,7 +53,7 @@
       </div>
       <!-- <div class="info_div1">Me</div> -->
       <!-- <div class="info_div1"> -->
-        <div class="dropdown dropdown_home">
+      <div class="dropdown dropdown_home">
           <button class="btn btn-primary dropdown-toggle user_name" type="button" data-toggle="dropdown"> 
            {{userData.username}}
           </button>
@@ -62,7 +62,7 @@
             <li><a>change password</a></li>
             <li><a ng-click="logout();">Logout</a></li>
           </ul>
-        </div>
+      </div>
       <!-- </div> -->
     </div>
     <!-- showed if user is not Logged in -->
@@ -147,7 +147,7 @@
       </div>
       <div class="contnt_2" ng-repeat="post in posts" infinite-scroll='loadMore()' infinite-scroll-distance='2'>
         <div class="div_a">
-          <div class="div_title">{{post.postTitle}}</div>
+          <div class="div_title"><a ng-click="singlePost(post)" style="cursor:pointer;text-decoration:none;">{{post.postTitle}}</a></div>
           <div class="btm_rgt">
             <div class="btm_arc">{{post.catType}}</div>
           </div>
@@ -170,7 +170,7 @@
               <ul>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_001.png" alt="share" /></span>Share</a></li>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li>
-                <li><a href="#"><span class="btn_icon"><img src="images/icon_004.png" alt="share" /></span>4 Comments</a></li>
+                <li><a href="#"><span class="btn_icon"><img src="images/icon_004.png" alt="share" /></span>{{post.commentcount}} Comments</a></li>
                 <li><a ng-click="likeOrUnlike(post,post.likeOrUnlike);"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{post.likeOrUnlike}}</a></li>
                 <div class="like_count" style="margin-right: 10px;"><span class="lft_cnt"></span><span class="mid_cnt">{{post.likecount}}</span><span class="rit_cnt"></span></div>
               <!--   <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>Unlike</a></li> -->

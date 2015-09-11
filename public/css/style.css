@@ -111,7 +111,6 @@ h1, h2, h3, h4, h5, h6, ul, img, a, p {
 	background-position: 8px;
 	text-indent: 30px;
 	background-repeat: no-repeat;
-	margin-left: 5%;
 	font-size: 13px;
 	font-style: italic;
 	color: #000000;
@@ -120,6 +119,8 @@ h1, h2, h3, h4, h5, h6, ul, img, a, p {
 	width: 208px;
 	height: 31px;
 	margin-top: 1%;
+	margin-left: 2%;
+	width: 200px;
 }
 .msg_box {
 	float: left;
@@ -699,4 +700,9 @@ input[type="text"] {
 .post_list ul li a{
     cursor: pointer;
     text-decoration: none;
+}
+
+.menus a {
+padding: 12px;
+color: white;
 }
