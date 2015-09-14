@@ -62,7 +62,7 @@
        <ul>
         <li>
          <span>Email-ID</span>
-         <input type="email" name="email" ng-model="loginData.email" placeholder="e.g.,hellman@gmail.com"  autofocus="false" autocomplete="off"  required>
+         <input type="email" name="email" ng-model="loginData.email" placeholder="e.g.,hellman@gmail.com"  autofocus="false" autocomplete="off"  ng-change="hideErromessOnchange();" required>
          <label class="item item-input" style="color:red" ng-show="login.email.$dirty && login.email.$invalid">
             <span>
                 <span ng-show="login.email.$error.required">Email Id can not be blank</span>
@@ -73,7 +73,7 @@
         </li>
         <li>
           <span>Password</span>
-          <input type="password" placeholder="Enter your password" name="password" ng-model="loginData.password" required>
+          <input type="password" placeholder="Enter your password" name="password" ng-model="loginData.password" ng-change="hideErromessOnchange();" required>
            <label class="item item-input" style="color:red" ng-show="login.password.$dirty && login.password.$invalid">
             <span class="item item-input" style="color:red" ng-show="login.password.$error.required">  
                  Password can not be blank
@@ -81,13 +81,13 @@
           </label> 
         </li>
         <!-- <li><input type="checkbox">Remember Me</li> -->
-        <li>
+  <!--       <li>
            <input type="checkbox" ng-model="loginData.rememberme" name="rememberme" value="true" required >
              Remember Me
            <label>  
-          <!--  <span style="color:red" ng-show="login.rememberme.$error.required && checkbox.buttonClicked">Please select the Checkbox before submit</span>
-           </label> -->
-        </li>
+            <span style="color:red" ng-show="login.rememberme.$error.required && checkbox.buttonClicked">Please select the Checkbox before submit</span>
+           </label> 
+        </li> -->
         <li style="color:red" ng-show="options.showError">
            <label><span>{{options.ErrorMessage}}</span></label>
         </li>

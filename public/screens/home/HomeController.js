@@ -103,19 +103,75 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
     var temp_catgory_array =[];
     $scope.tempArray.forEach(function(value){
       temp_catgory_array.push(value);
-    }) ;
+    });
     $scope.posts = temp_catgory_array.reverse();
 
-    console.log("oldest after reverse temparray >>>>>>>>>>>" + JSON.stringify($scope.tempArray));
+    console.log("oldest after reverse temparray" + JSON.stringify($scope.tempArray));
 
   } else if (category == "Most Pet") {
+    $scope.posts =[];
+    var temp_pet_array = [];
+    $scope.tempArray.forEach(function(value){
+      temp_pet_array.push(value);
+    });
+
+    temp_pet_array.sort(function (a, b) {
+     if (a.likecount > b.likecount) {
+       return -1;
+     }
+     if (a.likecount < b.likecount) {
+      return 1;
+     }
+     // a must be equal to b
+      return 0;
+    }); 
+
+    $scope.posts = temp_pet_array;
 
   } else if (category == "Most Clicks"){
 
+    $scope.posts =[];
+    var temp_most_click_array = [];
+    $scope.tempArray.forEach(function(value){
+      temp_most_click_array.push(value);
+    });
+
+     temp_most_click_array.sort(function (a, b) {
+     if (a.clickCount > b.clickCount) {
+       return -1;
+     }
+     if (a.clickCount < b.clickCount) {
+      return 1;
+     }
+     // a must be equal to b
+      return 0;
+    }); 
+    
+     $scope.posts = temp_most_click_array;
+
   } else if (category == "Most Commented"){
+    
+    $scope.posts =[];
+    var temp_most_commented_array = [];
+    $scope.tempArray.forEach(function(value){
+      temp_most_commented_array.push(value);
+    });
+
+    temp_most_commented_array.sort(function (a, b) {
+     if (a.commentcount > b.commentcount) {
+       return -1;
+     }
+     if (a.commentcount < b.commentcount) {
+      return 1;
+     }
+     // a must be equal to b
+      return 0;
+   }); 
+   
+   $scope.posts = temp_most_commented_array;
 
   } else{
-    console.log("$scope.post in inside category click--------------" +JSON.stringify($scope.tempArray));
+    console.log("$scope.post in inside category click" +JSON.stringify($scope.tempArray));
     $scope.posts = [];
     if(category =="ALL"){
       $scope.posts = $scope.tempArray;
@@ -201,21 +257,32 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
  //single post
 
+
+
  $scope.singlePost = function(postData){
-  console.log("postData:" +JSON.stringify(postData));
+ 
+  console.log("Post Data:" +JSON.stringify(postData));
   HomeDataService.getSinglePost(postData._id).then(function(data){
-    console.log("<<<<<<data.likeby:",data.likeby);
-    console.log("<<<<<<$scope.userData._id:",$scope.userData._id);
-    if(data.likeby.indexOf($scope.userData._id)>-1){
-      console.log("1>>>")
+
+   if(data.likeby.indexOf($scope.userData._id)>-1){
       data["likeOrUnlike"] = "Unlike";
     } else {
-      console.log("2>>>") 
+
       data["likeOrUnlike"] = "Likes";
     }
     console.log("Single post data success:" +JSON.stringify(data));
+  
+     $scope.posts.forEach(function(obj){
+         if(obj._id == data._id){
+             index = $scope.posts.indexOf(obj);
+         }    
+      })
+      var tempObj ={};
+      tempObj = data;
+      $scope.posts.splice(index, 1, tempObj);
+
     localstorageFactory.setPostData('postData',data)
-    $state.go('post');
+    //$state.go('post');
 
   },function(err){
 
@@ -307,7 +374,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
     };
     
         // controller logic
-        console.log("<<<<<<<<<<<$scope.categories:" +JSON.stringify($scope.categories));
+        console.log("$scope.categories:" +JSON.stringify($scope.categories));
         
         $scope.submitPost = function(){
          /* alert(">>>>>" + JSON.stringify($scope.selectedCategoryData));*/
@@ -316,7 +383,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
         if(!$scope.post.postTitle){
           console.log("0");
           $scope.options.showError = true;
-          $scope.options.ErrorMessage = "Title is mandatory";
+          $scope.options.ErrorMessage = "Please Enter the Title for Post";
           return;
         } 
         if (!$scope.selectedCategoryData) {
@@ -326,7 +393,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
            return; 
         } if(!$scope.post.postImage){
            $scope.options.showError = true;
-           $scope.options.ErrorMessage = "upload Image is mandatory";
+           $scope.options.ErrorMessage = "Please upload image for post";
            return; 
         } else {
 
@@ -345,6 +412,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
             /*var filterdatetime = $filter('date')(data.postedOn);
 
             alert("filterdatetime:" +filterdatetime);*/
+            data["likeOrUnlike"] = "Likes";
             $scope.posts.unshift(data);
             console.log("--------------------------------------------:");
             console.log("Posts after new post:" + JSON.stringify($scope.posts)); 
@@ -352,7 +420,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
             $scope.closeThisDialog($scope.closepopup);
 
           },function(err){
-              console.log("err>>>>>>>>>",err);
+              console.log("err",err);
               $scope.options.showError = true;
               $scope.options.ErrorMessage = err.data;
           })

@@ -378,7 +378,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f9', end
 }
 .btm_list {
 	float: left;
-	width: 80%;
+	width: 85%;
 	height: auto;
 }
 .btm_list ul {
@@ -413,6 +413,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3891f', end
 	font-size: 13px;
 	height: 24px;
 	line-height: 24px;
+	cursor: pointer;
+	text-decoration: none;
 }
 .btn_icon {
 	width: auto;
@@ -705,4 +707,31 @@ input[type="text"] {
 .menus a {
 padding: 12px;
 color: white;
+}
+
+.navigatn ul li a{
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.logo a img{
+	cursor: pointer;
+}
+
+.view_div a {
+	cursor: pointer;
+	text-decoration: none;
+}
+.register_sec ul li div{
+  color: red;
+  clear: both;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.list_info{
+	font-size:15px;
+}
+.image_name{
+	font-size:12px;
 }

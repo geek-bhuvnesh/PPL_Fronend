@@ -10,6 +10,10 @@ PPL_Frontend.controller('ForgetPasswordController',['$scope','$http','$state','$
      ErrorMessage :"",
      showError : false
    }
+
+   $scope.hideErromessOnchange= function(){
+        $scope.options.showError = false;
+    }
    
     $scope.OK = function(){
       

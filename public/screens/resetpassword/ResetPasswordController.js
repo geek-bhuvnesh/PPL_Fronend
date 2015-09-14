@@ -11,6 +11,10 @@ PPL_Frontend.controller('ResetPasswordController',['$scope','$http','$state','$s
         "popUp" : false
     }
 
+    $scope.hideErromessOnchange= function(){
+        $scope.options.showError = false;
+    }
+
     console.log("state params:" ,$stateParams);
     console.log("state params email:" ,$stateParams.email);
     console.log("state params token:" ,$stateParams.reset_pass_token);
@@ -24,7 +28,7 @@ PPL_Frontend.controller('ResetPasswordController',['$scope','$http','$state','$s
     }
 
     $scope.resetPassword = function() {
-      $scope.options.showError = false;
+  
       console.log("ResetPassword is called");
 
       $scope.reset.password = $sanitize($scope.reset.password);
@@ -32,7 +36,7 @@ PPL_Frontend.controller('ResetPasswordController',['$scope','$http','$state','$s
 
       if($scope.reset.password.length<8){
          $scope.options.showError = true;
-         $scope.options.ErrorMessage = "Password must contain more than 8 charachters:";
+         $scope.options.ErrorMessage = "Password must contain atleast Eight charachters";
          return;
       }
 
@@ -52,11 +56,11 @@ PPL_Frontend.controller('ResetPasswordController',['$scope','$http','$state','$s
           })
        } else {
        	 $scope.options.showError = true;
-         $scope.options.ErrorMessage = "400_password_not_matched";
+         $scope.options.ErrorMessage = "Password and confirm password not matched";
        }
      } else {
        $scope.options.showError = true;	
-       $scope.options.ErrorMessage = "password_and_confirm_password_cannot_blank";
+       $scope.options.ErrorMessage = "Password and confirm password cannot blank";
      } 
   } 
 

@@ -18,6 +18,10 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
     	buttonClicked :false
     }	
 
+    $scope.hideErromessOnchange= function(){
+        $scope.options.showError = false;
+    }
+
 	/*if(localstorageFactory.getVerified("verifiedUser")) {*/
 
 	  $scope.validateLogin = function () {
@@ -27,7 +31,7 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
  
         if (!$scope.loginData.password && !$scope.loginData.email) {
             $scope.options.showError = true;
-            $scope.options.ErrorMessage = "Username(Email Id) and Password are Required:";
+            $scope.options.ErrorMessage = "Username(Email Id) and Password are Required";
             return ;
 
         } /*else if(!$scope.loginData.rememberme){
@@ -56,7 +60,7 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
                 }  
                
             },function (err) {
-               console.log("err:",err);
+               console.log("err:" + JSON.stringify(err));
                $scope.options.showError = true;
                $scope.options["ErrorMessage"] = err.data;
             })
@@ -65,7 +69,7 @@ PPL_Frontend.controller('LoginController',['$scope','$http','$state','$rootScope
 
       } else {
           $scope.options.showError = true;
-          console.log("email address is not valid:");
+          console.log("Email address is not valid:");
           $scope.options["ErrorMessage"] = "Please Enter valid Email address";
       }
 

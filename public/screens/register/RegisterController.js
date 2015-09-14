@@ -1,4 +1,4 @@
-PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','SignUpDataFactory','$state','localstorageFactory',function($scope,$http,$sanitize,SignUpDataFactory,$state,localstorageFactory){
+PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','SignUpDataFactory','$state','localstorageFactory','$timeout',function($scope,$http,$sanitize,SignUpDataFactory,$state,localstorageFactory,$timeout){
 	console.log("Inside RegisterController");
    
     $scope.loginData ={
@@ -7,7 +7,8 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
         "email" : "",
         "password" : "",
         "confirmPassword" :"",
-        "termsagreement" :""
+        "termsagreement" :"",
+        "popUp" : false
     };
     $scope.options = {
         ErrorMessage :"",
@@ -17,6 +18,23 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
     $scope.checkbox = {
     	buttonClicked :false
     }	
+
+    $scope.hideErromessOnchange= function(){
+        $scope.options.showError = false;
+        $scope.checkbox.buttonClicked = false;
+    }
+
+    $scope.OK = function(){
+      
+       $timeout(function() {
+            $state.go('login');
+       },1000);
+
+    }
+
+   /* $scope.closePopUP = function(){
+      $scope.loginData.popUp = false;
+    }*/
 
     //$scope.loginPopUp = true;
     $scope.Signup = function(){
@@ -36,14 +54,14 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
           console.log("1");
           //alert("User Name must contain 3 charatcer and Max 10 char:");
           $scope.options.showError = true;
-          $scope.options.ErrorMessage = "First Name must contain 3 charatcer and Max 10 char:";
+          $scope.options.ErrorMessage = "First name must contain 3 charatcer and Max 10 charachters";
           return;
         }
         
         if(!validator.isEmail($scope.loginData.email)){
           console.log("2");
           $scope.options.showError = true;
-          $scope.options.ErrorMessage = "Please Enter valid Email:";
+          $scope.options.ErrorMessage = "Please enter Email id";
           return;
         }
         if(!$scope.loginData.termsagreement){
@@ -54,13 +72,13 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
         if ($scope.loginData.password.length < 8) {
           console.log("4");
           $scope.options.showError = true;
-          $scope.options.ErrorMessage = "password must contain more than 8 charachters:";
+          $scope.options.ErrorMessage = "password must contain more than 8 charachters";
           return;
         }  
         if($scope.loginData.password != $scope.loginData.confirmPassword) {
           console.log("5");
           $scope.options.showError = true;
-          $scope.options.ErrorMessage = "These passwords don't match. Try again:";
+          $scope.options.ErrorMessage = "These passwords don't match. Try again";
           return;
         }  
         else {
@@ -76,10 +94,11 @@ PPL_Frontend.controller('RegisterController',['$scope','$http','$sanitize','Sign
           
           SignUpDataFactory.registerUser($scope.signUpDetails).then(function(data){
             console.log("Singup Data:" ,JSON.stringify(data));
+            $scope.loginData.popUp = true;
             //$state.go('verifyloading');
             /*$rootScope.verifiedUser = false;*/
             localstorageFactory.setVerified("verifiedUser",false);
-            $state.go('login');
+            //$state.go('login');
             
            },function(err){
              console.log("err.data:",err.data);

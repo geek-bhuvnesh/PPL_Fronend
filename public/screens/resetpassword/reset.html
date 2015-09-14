@@ -70,7 +70,7 @@
        <ul>
         <li>
          <span>Enter New Password</span>
-         <input type="password" name="password" placeholder="Enter your new password" ng-model="reset.password" required>
+         <input type="password" name="password" placeholder="Enter your new password" ng-model="reset.password" ng-change="hideErromessOnchange();" required>
          <label class="item item-input" style="color:red" ng-show="resetpassword.password.$dirty && resetpassword.password.$invalid">
             <span  style="color:red" ng-show="resetpassword.password.$error.required">  
                 New Password can not be blank
@@ -79,7 +79,7 @@
         </li>
         <li>
          <span>Confirm Password</span>
-         <input type="password" name="confirmpassword" placeholder="Enter your password again" ng-model="reset.confirm_password" required>
+         <input type="password" name="confirmpassword" placeholder="Enter your password again" ng-model="reset.confirm_password" ng-change="hideErromessOnchange();" required>
          <label class="item item-input" style="color:red" ng-show="resetpassword.confirmpassword.$dirty && resetpassword.confirmpassword.$invalid">
             <span class="item item-input" style="color:red" ng-show="resetpassword.confirmpassword.$error.required">  
                 Confirm Password can not be blank

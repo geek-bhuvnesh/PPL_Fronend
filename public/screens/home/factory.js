@@ -44,7 +44,11 @@ PPL_Frontend.factory("unlike",  ["$resource","pplconfig",function($resource,pplc
 PPL_Frontend.factory("getPost", ["$resource","pplconfig",function($resource,pplconfig) {
     return $resource(pplconfig.url+":3000/getPost/:postid", {
        postid: '@postid',
-   }, {});
+   }, {
+       update: {
+           method: "PUT"
+       }
+     });
 }]);
 
 PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost) {
@@ -188,8 +192,8 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
            var defer = $q.defer();
            try {
                getPost
-                   .get({
-                       postid: postid,
+                   .update({
+                       postid: postid
                    },function(resp) {
                       postData = resp;
                       defer.resolve(resp);

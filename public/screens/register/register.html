@@ -1,3 +1,11 @@
+<div class="popup_sec" ng-show="loginData.popUp">
+<!-- <div class="clos_btn"><img src="images/clos.png"  alt="" ng-click="closePopUP();"></div> -->
+<div class="pop_hdr">A mail has been send to your e-mail Id to veirfy login</div>
+<div class="man_contnt">
+  <span>Please Check Your Mail Box!</span>
+  <input type="submit" value="Ok" ng-click="OK();">
+</div>
+</div>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
@@ -45,11 +53,11 @@
   <div class="header_rgt">
     <div class="flag_div"><img src="images/flag.png"></div>
     <input type="text" placeholder="Search" class="txt_box">
-    <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
+    <!-- <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
     <div class="info_div">
       <div class="image_div"> <img src="images/pic.png"> </div>
       <div class="info_div1">Me</div>
-    </div>
+    </div> -->
   </div>
 </div>
 <div class="container">
@@ -63,7 +71,7 @@
     <!-- <li><span>Username</span><input type="text" placeholder="Enter your username"></li> -->
            <li>
              <span>First Name</span>
-             <input type="text" name="firstname" placeholder="Enter your first name" ng-model="loginData.firstname" style="text-transform: capitalize;" autocomplete="off" required>
+             <input type="text" name="firstname" placeholder="Enter your first name" ng-model="loginData.firstname" style="text-transform: capitalize;" autocomplete="off" ng-change="hideErromessOnchange();" required>
              <label class="item item-input" ng-show="register.firstname.$dirty && register.firstname.$invalid">  
                 <span style="color:red">
                 <span ng-show="register.firstname.$error.required">First Name Required</span>
@@ -72,11 +80,11 @@
            </li>
            <li>
               <span>Last Name</span>
-              <input type="text" name="lastname" placeholder="Enter your last name" ng-model="loginData.lastname" style="text-transform: capitalize;" autocomplete="off">
+              <input type="text" name="lastname" placeholder="Enter your last name" ng-model="loginData.lastname" style="text-transform: capitalize;" autocomplete="off" ng-change="hideErromessOnchange();">
            </li>
            <li>
               <span>Email</span>
-              <input type="email" name="email" placeholder="e.g.,hellman@gmail.com" ng-model="loginData.email" required>
+              <input type="email" name="email" placeholder="e.g.,hellman@gmail.com" ng-model="loginData.email" ng-change="hideErromessOnchange();" required>
               <label class="item item-input" ng-show="register.email.$dirty && register.email.$invalid">  
                  <span style="color:red">
                  <span ng-show="register.email.$error.required">Email id can not be blank</span>
@@ -86,7 +94,7 @@
            </li>
            <li>
               <span>Password</span>
-              <input type="password" name="password" placeholder="Enter your password" ng-model="loginData.password" required >
+              <input type="password" name="password" placeholder="Enter your password" ng-model="loginData.password" ng-change="hideErromessOnchange();" required >
               <label class="item item-input" style="color:red" ng-show="register.password.$dirty && register.password.$invalid">
               <span class="item item-input" style="color:red" ng-show="register.password.$error.required">  
                  Password can not be blank
@@ -95,7 +103,7 @@
            </li>
            <li>
               <span>Confirm Password</span>
-              <input type="password" name="confirmPassword" placeholder="Enter your password Again" ng-model="loginData.confirmPassword" required>
+              <input type="password" name="confirmPassword" placeholder="Enter your password Again" ng-model="loginData.confirmPassword" ng-change="hideErromessOnchange();" required>
               <label class="item item-input" style="color:red" ng-show="register.confirmPassword.$dirty && register.confirmPassword.$invalid">
               <span class="item item-input" style="color:red" ng-show="register.confirmPassword.$error.required">  
                  Confirm Password can not be blank
@@ -103,16 +111,16 @@
               </label>
            </li>
            <li>
-            <input type="checkbox" ng-model="loginData.termsagreement" name="termsagreement" value="true" required >
+            <input type="checkbox" ng-model="loginData.termsagreement" name="termsagreement" value="true" ng-change="hideErromessOnchange();" required>
              I agree to Term & Conditions
            <!-- <span style="color:red" ng-show="options.showError">Please select the Checkbox before submit</span>   -->
            <label><span style="color:red" ng-show="register.termsagreement.$error.required && checkbox.buttonClicked">Please select the Checkbox before submit</span></label>
            </li>
-           <div style="color:red" ng-show="options.showError">
-               <label><span>{{options.ErrorMessage}}</span></label>
-           </div>
+           <li >
+               <div style="color:red" ng-show="options.showError"><label><span>{{options.ErrorMessage}}</span></label></div>
+           </li>
            <li><input  ng-disabled="register.firstname.$dirty &&  register.firstname.$invalid ||
-          register.email.$dirty && register.email.$invalid || register.termsagreement.$dirty &&  register.termsagreement.$invalid || register.password.$dirty && register.password.$invalid ||register.confirmPassword.$dirty && register.confirmPassword.$invalid" type="submit" value="Register"></li>
+          register.email.$dirty && register.email.$invalid  || register.password.$dirty && register.password.$invalid ||register.confirmPassword.$dirty && register.confirmPassword.$invalid || register.termsagreement.$dirty &&  register.termsagreement.$invalid" type="submit" value="Register"></li>
           </ul>
         <div class="addtnal_acnt">I already have an account.<a ui-sref="login">Login My Account !</a>
         </div>

@@ -1,4 +1,4 @@
-PPL_Frontend.controller('PostController',['$scope','$http','localstorageFactory','PostDataService','$sanitize',function($scope,$http,localstorageFactory,PostDataService,$sanitize){
+PPL_Frontend.controller('PostController',['$scope','$http','$state','localstorageFactory','PostDataService','$sanitize','HomeDataService',function($scope,$http,$state,localstorageFactory,PostDataService,$sanitize,HomeDataService){
 	console.log("Inside PostController");
 	 $scope.userData = localstorageFactory.getUserData('userData');
 	 $scope.postData = localstorageFactory.getUserData('postData');
@@ -37,6 +37,20 @@ PPL_Frontend.controller('PostController',['$scope','$http','localstorageFactory'
 	 $scope.postsShow = $scope.postsShow + 5;
 
 	 }
+
+	$scope.logout = function(){
+    console.log("Logout called");
+
+    HomeDataService.logout().then(function(data){
+      console.log("Logout Data:" ,data);
+      localstorageFactory.removeUser("userData");
+      $state.go('login');	
+
+    },function(err){
+
+    })
+
+  }
 	 
    
 

@@ -96,7 +96,7 @@ $(document).ready(function() {
         <ul>
          <li>
            <span>Enter E-mail ID</span>
-           <input type="email" placeholder="User@gmail.com" name="email" ng-model="forgetPassword.email" required>
+           <input type="email" placeholder="User@gmail.com" name="email" ng-model="forgetPassword.email" ng-change="hideErromessOnchange();" required>
            <label class="item item-input" ng-show="forgetpassword.email.$dirty && forgetpassword.email.$invalid">
            <span style="color:red">
             <span ng-show="forgetpassword.email.$error.required">Email Id can not be blank</span>
