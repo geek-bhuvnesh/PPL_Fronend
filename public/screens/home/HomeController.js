@@ -23,24 +23,46 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  //Get All posts
  HomeDataService.getAllPosts().then(function(data){
    console.log("Posts Data in Home Controller before:" + JSON.stringify(data));
-
+   $scope.featured_array = [];
    data.forEach(function(obj){
     var index =  data.indexOf(obj);
     var tempObj ={};
+    if(obj.featuredPost==true){
+      $scope.featured_array.push(obj);
+    }
     if(obj.likeby.indexOf($scope.userData._id)>-1){
       obj["likeOrUnlike"] = "Unlike";
-      tempObj = obj;
-      data.splice(index, 1, tempObj);
+      if(obj.flagby.indexOf($scope.userData._id)>-1){
+        obj["flagOrUnflag"] = "Unflag";
+        tempObj = obj;
+        data.splice(index, 1, tempObj);
+  
+      } else {
+        obj["flagOrUnflag"] = "Flag";
+        tempObj = obj;
+        data.splice(index, 1, tempObj);
+      }
   
     } else {
       obj["likeOrUnlike"] = "Likes";
-      tempObj = obj;
-      data.splice(index, 1, tempObj);
-    }
+      if(obj.flagby.indexOf($scope.userData._id)>-1){
+           obj["flagOrUnflag"] = "Unflag";
+           tempObj = obj;
+           data.splice(index, 1, tempObj);
+      } else {
+           obj["flagOrUnflag"] = "Flag";
+           tempObj = obj;
+           data.splice(index, 1, tempObj);
+      }
+  
+    } 
    
    })
    $scope.posts = data.reverse();
+   console.log("-----------------");
+   console.log("Posts Data in Home Controller After:" + JSON.stringify($scope.posts));
    $scope.tempArray = $scope.posts;
+   console.log("featured_array,length:" +JSON.stringify($scope.featured_array),$scope.featured_array.length);
  },function(err){
    console.log("error:",err);
    $scope.options.showError = true;
@@ -189,6 +211,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
   }
 
+ //Like or unlike work
 
  $scope.likeOrUnlike = function(selectedPost,likeOrUnlike){
   console.log("selectedPost:" +JSON.stringify(selectedPost));
@@ -211,14 +234,28 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
     var tempObj ={};
     if(data.likeby.indexOf($scope.likeDetails.likeby)>-1){
       data["likeOrUnlike"] = "Unlike";
-      tempObj = data;
-      $scope.posts.splice(index, 1, tempObj);
+      if(data.flagby.indexOf($scope.userData._id)>-1){
+           data["flagOrUnflag"] = "Unflag";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           data["flagOrUnflag"] = "Flag";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      }
   
     } else {
   
       data["likeOrUnlike"] = "Likes";
-      tempObj = data;
-      $scope.posts.splice(index, 1, tempObj);
+      if(data.flagby.indexOf($scope.userData._id)>-1){
+           data["flagOrUnflag"] = "Unflag";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           data["flagOrUnflag"] = "Flag";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      }
   
     }
 
@@ -243,8 +280,15 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
       console.log("index:",index)
       console.log("tempObj:",tempObj);
       data["likeOrUnlike"] = "Likes"
-      tempObj = data;
-      $scope.posts.splice(index, 1, tempObj);
+      if(data.flagby.indexOf($scope.userData._id)>-1){
+           data["flagOrUnflag"] = "Unflag";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           data["flagOrUnflag"] = "Flag";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      }
 
     },function(err){
 
@@ -253,6 +297,109 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
   }
 
  }
+
+ //Flag or unflag work
+  
+  $scope.flagOrUnflag = function(selectedPost,flagOrUnflag){
+  console.log("selectedPost:" +JSON.stringify(selectedPost));
+  console.log("flag or flagOrUnflag:" +flagOrUnflag);
+
+  if(flagOrUnflag =="Flag"){
+    $scope.flagDetails ={};
+    $scope.flagDetails.postid = selectedPost._id,
+    $scope.flagDetails.flagby = $scope.userData._id;
+    console.log("Flag details:" +JSON.stringify($scope.flagDetails));
+
+    HomeDataService.flagUpdate($scope.flagDetails).then(function(data){
+    console.log("Flag Data success:" +JSON.stringify(data));
+    var index = {};
+    $scope.posts.forEach(function(obj){
+         if(obj._id == data._id){
+             index = $scope.posts.indexOf(obj);
+         }    
+    })
+    var tempObj ={};
+    if(data.flagby.indexOf($scope.flagDetails.flagby)>-1){
+      data["flagOrUnflag"] = "Unflag";
+      if(data.likeby.indexOf($scope.userData._id)>-1){
+           data["likeOrUnlike"] = "Unlike";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           data["likeOrUnlike"] = "Likes";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      }
+  
+  
+    } else {
+  
+      data["flagOrUnflag"] = "Flag";
+      if(data.likeby.indexOf($scope.userData._id)>-1){
+           data["likeOrUnlike"] = "Unlike";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           data["likeOrUnlike"] = "Likes";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      }
+  
+    }
+
+    },function(err){
+
+    })
+  } else if(flagOrUnflag =="Unflag"){
+    $scope.unflagDetails ={};
+    $scope.unflagDetails.postid = selectedPost._id,
+    $scope.unflagDetails.flagby = $scope.userData._id;
+    console.log("unflag details:" +JSON.stringify($scope.unflagDetails));
+
+    HomeDataService.unflagUpdate($scope.unflagDetails).then(function(data){
+      console.log("unflag Data success:" +JSON.stringify(data));
+      var index = {};
+      $scope.posts.forEach(function(obj){
+         if(obj._id == data._id){
+             index = $scope.posts.indexOf(obj);
+         }    
+      })
+      var tempObj ={};
+      console.log("index:",index)
+      console.log("tempObj:",tempObj);
+      data["flagOrUnflag"] = "Flag"
+      if(data.likeby.indexOf($scope.userData._id)>-1){
+           data["likeOrUnlike"] = "Unlike";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           data["likeOrUnlike"] = "Likes";
+           tempObj = data;
+           $scope.posts.splice(index, 1, tempObj);
+      }
+
+    },function(err){
+
+    })  
+
+  }
+
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
  //single post

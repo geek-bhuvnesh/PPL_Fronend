@@ -96,7 +96,16 @@
       <div class="rght_cate">
         <div class="rght_cate_hd" id="opn_cat_bg">Featured</div>
         <div class="sub_dwn">
-          <div class="feat_sec">
+          <div class="feat_sec" ng-repeat="featured_post in featured_array">
+            <div class="feat_sec_img"><!-- <img src="images/feat_img2.png" alt="image" /> -->
+            <img ng-src="{{url}}/{{featured_post.postImage}}" alt="image" />
+            </div>
+            <div class="feat_txt">{{featured_post.postTitle}}</div>
+            <div class="btm_rgt">
+              <div class="btm_arc">{{featured_post.catType}}</div>
+            </div>
+          </div>
+         <!--  <div class="feat_sec">
             <div class="feat_sec_img"><img src="images/feat_img1.png" alt="image" /></div>
             <div class="feat_txt">Lorem Ipusum Text</div>
             <div class="btm_rgt">
@@ -116,7 +125,7 @@
             <div class="btm_rgt">
               <div class="btm_arc">Rabbits</div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -142,15 +151,14 @@
               <li><a ng-click="filterPosts(filterArray.most_commented);"><span class="list_img"><img src="images/img_5.png"></span>{{filterArray.most_commented}}</a></li>
             </ul>
           </div>
-         <!--  <div class="post_txt">4 New Post Updates</div> -->
+          <div class="post_txt">4 New Post Updates</div>
         </div>
       </div>
       <div class="contnt_2" ng-repeat="post in posts">
         <div class="div_a">
           <div class="div_title"><a ng-click="singlePost(post)" style="cursor:pointer;text-decoration:none;">{{post.postTitle}}</a></div>
           <div class="btm_rgt">
-            <!-- <div class="btm_arc">{{post.catType}}</div> -->
-            <div class="btm_arc">CATS</div>
+            <div class="btm_arc">{{post.catType}}</div>
           </div>
           <div class="div_top">
             <div class="div_top_lft user_img">
@@ -170,7 +178,10 @@
             <div class="btm_list">
               <ul>
                 <li><a ><span class="btn_icon"><img src="images/icon_001.png" alt="share" /></span>Share</a></li>
-                <li><a ><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li>
+               <!--  <li><a ><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li> -->
+                <li><a ng-click="flagOrUnflag(post,post.flagOrUnflag);"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span >{{post.flagOrUnflag}}</a></li>
+                <div class="like_count" style="margin-right: 10px;"><span class="lft_cnt"></span><span class="mid_cnt">{{post.flagcount}}</span><span class="rit_cnt"></span></div>
+
                 <li><a ><span class="btn_icon"><img src="images/icon_004.png" alt="share" /></span>{{post.commentcount}} Comments</a></li>
                 <li><a ng-click="likeOrUnlike(post,post.likeOrUnlike);"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span >{{post.likeOrUnlike}}</a></li>
                 <div class="like_count" style="margin-right: 10px;"><span class="lft_cnt"></span><span class="mid_cnt">{{post.likecount}}</span><span class="rit_cnt"></span></div>

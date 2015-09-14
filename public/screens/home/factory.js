@@ -51,9 +51,29 @@ PPL_Frontend.factory("getPost", ["$resource","pplconfig",function($resource,pplc
      });
 }]);
 
-PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost) {
+PPL_Frontend.factory("flag",  ["$resource","pplconfig",function($resource,pplconfig) {
+     return $resource(pplconfig.url+":3000/flag/:postid",{ postid: "@postid"},
+      {
+       update: {
+           method: "PUT"
+       }
+   });
+}]);
+
+
+PPL_Frontend.factory("unflag",  ["$resource","pplconfig",function($resource,pplconfig) {
+     return $resource(pplconfig.url+":3000/unflag/:postid",{ postid: "@postid"},
+      {
+       update: {
+           method: "PUT"
+       }
+   });
+}]);
+
+PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost","flag","unflag", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost,flag,unflag) {
    var userData = {}; 
    var likeUnlikeData = {};
+   var flagUnflagData = {};
    var postData = {};
    var selected;
    return {
@@ -207,6 +227,53 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
                defer.reject({});
            }
            return defer.promise;
-       }  
+       },  
+       flagUpdate : function(flagData){
+         var defer = $q.defer();
+         console.log("---Flag data START factory", flagData)
+           try {
+                flag
+                   .update({
+                    "postid":flagData.postid,
+                    "flagby":flagData.flagby
+                   }, function(resp) {
+                       flagUnflagData = resp;
+                       defer.resolve(flagUnflagData);
+                   }, function(err) {
+                       flagUnflagData = {};flagUnflagData
+                       defer.reject(err);
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               flagUnflagData = {};
+               defer.reject({});
+           }
+           return defer.promise;         
+       },
+       unflagUpdate:function(unflagData){
+         var defer = $q.defer();
+         console.log("---Unflag data START factory", unflagData)
+           try {
+                unflag
+                   .update({
+                    "postid":unflagData.postid,
+                    "flagby":unflagData.flagby
+                   }, function(resp) {
+                       flagUnflagData = resp;
+                       defer.resolve(flagUnflagData);
+                   }, function(err) {
+                       flagUnflagData = {};
+                       defer.reject(err);
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               flagUnflagData = {};
+               defer.reject({});
+           }
+           return defer.promise;     
+
+       }
    }
 }]);
