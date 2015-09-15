@@ -1,3 +1,11 @@
+<div class="popup_sec" ng-show="options.popup">
+<!-- <div class="clos_btn"><img src="images/clos.png"  alt="" ng-click="closePopUP();"></div> -->
+<div class="pop_hdr">You are not logged in</div>
+<div class="man_contnt">
+  <span>Please Login</span>
+  <input type="submit" value="Ok" ng-click="OK();">
+</div>
+</div>
 
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-inner">
@@ -151,7 +159,7 @@
               <li><a ng-click="filterPosts(filterArray.most_commented);"><span class="list_img"><img src="images/img_5.png"></span>{{filterArray.most_commented}}</a></li>
             </ul>
           </div>
-          <div class="post_txt">4 New Post Updates</div>
+          <div class="post_txt" ng-show="newPosts.showNewPost" ng-click="newPosts()">{{newPosts.count}} New Post Updates</div>
         </div>
       </div>
       <div class="contnt_2" ng-repeat="post in posts">

@@ -31,7 +31,6 @@ PPL_Frontend.factory("like",  ["$resource","pplconfig",function($resource,pplcon
    });
 }]);
 
-
 PPL_Frontend.factory("unlike",  ["$resource","pplconfig",function($resource,pplconfig) {
      return $resource(pplconfig.url+":3000/unlike/:postid",{ postid: "@postid"},
       {
@@ -70,7 +69,14 @@ PPL_Frontend.factory("unflag",  ["$resource","pplconfig",function($resource,pplc
    });
 }]);
 
-PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost","flag","unflag", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost,flag,unflag) {
+PPL_Frontend.factory("newposts", ["$resource","pplconfig",function($resource,pplconfig) {
+    return $resource(pplconfig.url+":3000/newPosts/:existPostsLength", {
+      existPostsLength: '@existPostsLength',
+   }, {});
+}]);
+
+
+PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost","flag","unflag","newposts", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost,flag,unflag,newposts) {
    var userData = {}; 
    var likeUnlikeData = {};
    var flagUnflagData = {};
@@ -274,6 +280,27 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
            }
            return defer.promise;     
 
-       }
+       },
+        getNewPost: function(existPostsLength){
+         console.log("ALL New Posts factory");
+           var defer = $q.defer();
+           try {
+               newposts
+                   .query({
+                    "existPostsLength":existPostsLength
+                   },function(resp) {
+                      userData = resp;
+                      defer.resolve(resp);
+                   },function(err) {
+                       userData = {};
+                       defer.reject({});
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               defer.reject({});
+           }
+           return defer.promise;
+       } 
    }
 }]);

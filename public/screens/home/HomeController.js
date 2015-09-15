@@ -1,12 +1,19 @@
-PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','localstorageFactory','$state','ngDialog','Upload','$filter',function($scope,$http,HomeDataService,localstorageFactory,$state,ngDialog,Upload,$filter){
+PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','localstorageFactory','$state','ngDialog','Upload','$filter','$timeout',function($scope,$http,HomeDataService,localstorageFactory,$state,ngDialog,Upload,$filter,$timeout){
  console.log("Inside Controller");
 	
 
  $scope.options = {
      ErrorMessage :"",
-     showError : false
+     showError : false,
+     popup : false
  }
 
+ $scope.newPosts ={
+   "count" : 0,
+   "showNewPost" : false
+ }
+
+ 
  $scope.User_logged_in = true;
  console.log("1:",localstorageFactory.getUserData('userData').email);
  if(!localstorageFactory.getUserData('userData').email){
@@ -22,7 +29,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  $scope.tempArray = [];
  //Get All posts
  HomeDataService.getAllPosts().then(function(data){
-   console.log("Posts Data in Home Controller before:" + JSON.stringify(data));
+   //console.log("Posts Data in Home Controller before:" + JSON.stringify(data));
    $scope.featured_array = [];
    data.forEach(function(obj){
     var index =  data.indexOf(obj);
@@ -60,9 +67,11 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
    })
    $scope.posts = data.reverse();
    console.log("-----------------");
-   console.log("Posts Data in Home Controller After:" + JSON.stringify($scope.posts));
+   //console.log("Posts Data in Home Controller After:" + JSON.stringify($scope.posts));
    $scope.tempArray = $scope.posts;
-   console.log("featured_array,length:" +JSON.stringify($scope.featured_array),$scope.featured_array.length);
+   //console.log("featured_array,length:" +JSON.stringify($scope.featured_array),$scope.featured_array.length);
+   $scope.newPosts.showNewPost =  false;
+   $scope.makeCall();
  },function(err){
    console.log("error:",err);
    $scope.options.showError = true;
@@ -72,7 +81,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  
  //Get All category
  HomeDataService.getAllCategories().then(function(data){
-  console.log("Catgeory Data in Home Controller:" + JSON.stringify(data));
+  //console.log("Catgeory Data in Home Controller:" + JSON.stringify(data));
   localstorageFactory.setUserData('categoryData',data);
   $scope.categories = data;
 
@@ -386,22 +395,6 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  //single post
 
 
@@ -437,14 +430,56 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
   
  }
 
+ // new posts
+ 
+
+ $scope.makeCall = function() {
+      console.log("Post Array Length:" +$scope.posts.length);
+      HomeDataService.getNewPost($scope.posts.length).then(function(data){
+          console.log("New Post Data:" +JSON.stringify(data));
+          $scope.newPostsArray =[];
+          if(data.length>0){
+            $scope.newPosts.count = data.length;
+            $scope.newPosts.showNewPost =  true;
+            $scope.newPostsArray = data;
+          } else {
+            $scope.newPosts.count = 0;
+            $scope.newPosts.showNewPost =  false;
+            $scope.newPostsArray = [];
+          }
+      },function(err){
+
+      })
+           // start next API call after some timeout
+      $timeout(function() {
+          $scope.makeCall();
+      }, 20000);
+}
+
+$scope.newPosts = function(){
+//console.log("Posts length before:" ,$scope.posts.length);
+ $scope.newPostsArray.forEach(function(value){
+   console.log("ABC:" + JSON.stringify(value));
+   $scope.posts.splice(0,0,value);
+ })
+console.log("Posts length after:" ,$scope.posts.length);
+//$scope.newPosts.showNewPost =  false;
+
+}
+
+
+ $scope.OK = function(){
+      
+    $timeout(function() {
+        $state.go('login');
+    },1000);
+
+ }
 
  $scope.uploadPost = function () {
-     $scope.showPostimage = false;
-
-    console.log("<<<<<<<<<<<<<<<<<<<",$scope.userData);
+    $scope.showPostimage = false;
     if(!$scope.userData.email){
-      alert("You are not logged in,please first login");
-      //$state.go('login');
+       $scope.options.popup = true;
     } else {  
 
      console.log("upload post function:");
