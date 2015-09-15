@@ -1,4 +1,4 @@
-var PPL_Frontend = angular.module('PPLFrontend',['ui.router','ngSanitize','ngResource','ngDialog','ngFileUpload','angularFileUpload','angularMoment','infinite-scroll']);
+var PPL_Frontend = angular.module('PPLFrontend',['ui.router','ngSanitize','ngResource','ngDialog','ngFileUpload','angularFileUpload','angularMoment','infinite-scroll','ngMessages']);
 
 PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 
@@ -33,7 +33,11 @@ PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
 		url:'/post',
 		templateUrl:'screens/postpage/singal_post.html',
 		controller:'PostController'
-	})
+	}).state('changepassword',{
+    url:'/changepassword',
+    templateUrl:'screens/changepassword/changepassword.html',
+    controller:'ChangePasswordController'
+  })
 
     $httpProvider.defaults.withCredentials = true;
     $urlRouterProvider.otherwise('/home');
