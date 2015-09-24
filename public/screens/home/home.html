@@ -57,7 +57,8 @@
     <!-- showed if user login -->
     <div class="info_div_home" ng-show="User_logged_in">
       <div class="image_div"> 
-        <img src="images/pic.png"> 
+         <img ng-src="{{url}}{{userData.photo}}" ng-if="userData.photo">
+        <img src="images/pic.png" ng-if="!userData.photo"> 
       </div>
       <!-- <div class="info_div1">Me</div> -->
       <!-- <div class="info_div1"> -->
@@ -66,8 +67,9 @@
            {{userData.username}}
           </button>
           <ul class="dropdown-menu">
-            <li><a>My Profile</a></li>
-            <li><a ui-sref="changepassword">change password</a></li>
+            <li><a ng-click="gotToProfile();">My Profile</a></li>
+            <li><a ui-sref="changepassword">Change password</a></li>
+            <li ng-if="userData.isAdmin"><a ng-click="adminPage();" >Manage Categories</a></li>
             <li><a ng-click="logout();">Logout</a></li>
           </ul>
       </div>
@@ -88,7 +90,7 @@
       <!-- <div class="rght_btn"> <span class="rght_btn_icon"><img src="images/btn_icona.png" alt="up" /></span> <span class="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span> <a href="#">Invite Friends</a> </div> -->
       <div class="rght_cate">
          <div class="rght_cate_hd" id="rght_cat_bg">Categories</div>
-        <div class="rght_list" ng-repeat="category in categories track by $index">
+          <div class="rght_list" ng-repeat="category in categories track by $index">
            <ul>
            <li><a ng-click="filterPosts(category.catName);"><span class="list_icon"><img src="images/{{category.image}}" alt="up" /></span>{{category.catName}}</a></li>
            </ul>
@@ -102,17 +104,25 @@
         </div> 
       </div>
       <div class="rght_cate">
-        <div class="rght_cate_hd" id="opn_cat_bg">Featured</div>
+        <div class="rght_cate_hd" id="opn_cat_bg" ng-if="featuredposts.length>0">Featured</div>
         <div class="sub_dwn">
-          <div class="feat_sec" ng-repeat="featured_post in featured_array">
+          <div class="feat_sec" ng-repeat="featured_post in featuredposts track by $index">
             <div class="feat_sec_img"><!-- <img src="images/feat_img2.png" alt="image" /> -->
+            <img ng-src="{{url}}/{{featured_post.postImage}}" alt="image" />
+            </div>
+            <div class="feat_txt">{{featured_post.postTitle}}</div>
+            <div class="btm_rgt">
+              <div class="btm_arc">{{featured_post.catId.catName}}</div>
+            </div>
+          </div>
+          <!-- <div class="feat_sec" ng-repeat="featured_post in featured_array" ng-if="categoryType=='ALL'">
             <img ng-src="{{url}}/{{featured_post.postImage}}" alt="image" />
             </div>
             <div class="feat_txt">{{featured_post.postTitle}}</div>
             <div class="btm_rgt">
               <div class="btm_arc">{{featured_post.catType}}</div>
             </div>
-          </div>
+          </div> -->
          <!--  <div class="feat_sec">
             <div class="feat_sec_img"><img src="images/feat_img1.png" alt="image" /></div>
             <div class="feat_txt">Lorem Ipusum Text</div>
@@ -141,11 +151,11 @@
       <div class="contnt_1">
         <div class="list_1">
           <ul>
-            <li>
+           <!--  <li>
               <input type="checkbox" class="chk_bx">
-              Friends</li>
+              Friends</li> -->
             <li>
-              <input type="checkbox" class="chk_bx">
+              <input type="checkbox"  ng-change='flaggedList(flagCheckboxModel.flagCheckboxModel.selected)' ng-model="flagCheckboxModel.flagCheckboxModel.selected" class="chk_bx">
               Flaged</li>
           </ul>
         </div>
@@ -162,15 +172,16 @@
           <div class="post_txt" ng-show="newPosts.showNewPost" ng-click="newPosts()">{{newPosts.count}} New Post Updates</div>
         </div>
       </div>
-      <div class="contnt_2" ng-repeat="post in posts">
-        <div class="div_a">
+      <div class="contnt_2"  infinite-scroll="loadMore()"  infinite-scroll-disabled='fetching||disabled' infinite-scroll-distance=0>
+        <div class="div_a" ng-repeat="post in posts track by $index">
           <div class="div_title"><a ng-click="singlePost(post)" style="cursor:pointer;text-decoration:none;">{{post.postTitle}}</a></div>
           <div class="btm_rgt">
-            <div class="btm_arc">{{post.catType}}</div>
+            <div class="btm_arc">{{post.catId.catName}}</div>
           </div>
           <div class="div_top">
             <div class="div_top_lft user_img">
-            <img src="images/pic.png">
+            <img ng-src="{{url}}{{post.postedBy.photo}}" ng-if="post.postedBy.photo">
+            <img src="images/pic.png" ng-if="!post.postedBy.photo">
             <!-- <img src="images/bhuvnesh_image_first.jpg"> -->
             {{post.postedBy.username}}
             </div>
@@ -195,11 +206,15 @@
                 <div class="like_count" style="margin-right: 10px;"><span class="lft_cnt"></span><span class="mid_cnt">{{post.likecount}}</span><span class="rit_cnt"></span></div>
               <!--   <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>Unlike</a></li> -->
              <!--    <div class="like_count"><span class="lft_cnt"></span><span class="mid_cnt">4</span><span class="rit_cnt"></span></div> -->
+               <li><a><span class="btn_icon"></span >Featured</a></li>
+               <input type="checkbox" name="featuredpost" ng-model="post.featuredPost">
               </ul>
             </div>
           </div>
         </div>
+        <div style='clear: both;'></div>
       </div>
+      <div ng-show='fetching && !disabled'>Loading data...</div>
 
         <div class="contnt_2" ng-show="catgoryMessage.showMess">
         <div class="div_a">

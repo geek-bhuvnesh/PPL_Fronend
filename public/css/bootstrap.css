@@ -6233,7 +6233,6 @@ a.badge:focus {
 	width: 44px;
 	height: 34px;
 	text-align: center;
-	padding-top: 7px;
 }
 .info_div1 {
 	float: right;
@@ -7009,16 +7008,7 @@ color: #000;
 height: auto;
 width: 100%;
 padding: 10px 10px 10px 0px;}
-.cmnt_div1 input.cmnt_bx1{ float:left; width:100%; border:1px solid #dddddd; background-color:#fff; height:37px; text-indent:6px; font-style:italic; font-size:14px;font-family: "Helvetica Neue"; color:#7f7f7f;background: #faf9f9;
-background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJod…EiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-background: -moz-linear-gradient(top, #faf9f9 0%, #f1eff2 100%);
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #faf9f9), color-stop(100%, #f1eff2));
-background: -webkit-linear-gradient(top, #faf9f9 0%, #f1eff2 100%);
-background: -o-linear-gradient(top, #faf9f9 0%, #f1eff2 100%);
-background: -ms-linear-gradient(top, #faf9f9 0%, #f1eff2 100%);
-background: linear-gradient(to bottom, #faf9f9 0%, #f1eff2 100%);
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faf9f9', endColorstr='#f1eff2', GradientType=0 );
-}
+
 .cmnt_div1 input.sub_bttn1{float:left; margin-top:2%; width:151px; height:36px; color:#FFF; cursor:pointer;box-shadow: 0 1px 0 #ffcc30 inset;
 background: #f3891f;
 background: -moz-linear-gradient(top, #f3891f 0%, #ec6a14 100%);

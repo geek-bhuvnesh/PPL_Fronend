@@ -1,0 +1,181 @@
+  <div class="popup_sec popup_profile" ng-show="options.editProPopUp">
+<!-- <div class="clos_btn"><img src="images/clos.png"  alt="" ng-click="closePopUP();"></div> -->
+ <div class="pop_hdr pop_hdr_edit_profile">
+  Edit Profile
+   <span class="closeEditProfile" ng-click="closeEditProfilePopUp()"> X </span>
+ </div>
+<!--  <div class="man_contnt">
+  <span>Please Login</span>
+  <input type="submit" value="Ok" ng-click="OK();">
+ </div> -->
+ <div>
+  <form target="_blank" ng-submit="editProfile()" name="editprofile" novalidate>
+      <div class="editprofile_sec" > 
+        <ul>
+    <!-- <li><span>Username</span><input type="text" placeholder="Enter your username"></li> -->
+           <li>
+              <img ng-if="!myProfileData.photo" ng-src="images/pic.png" type="file" ng-model="file" ngf-select="upload($files)" multiple="multiple" style="margin-bottom: 10px;">
+              <img ng-if="myProfileData.photo" ng-src="{{url}}/{{myProfileData.photo}}" type="file" ng-model="file" ngf-select="upload($files)" multiple="multiple" style="margin-bottom: 10px;">
+              <!-- <input type="file" ng-model="file" ngf-select="upload($files)" multiple="multiple"><br><br>  -->
+           </li>
+           <li>
+             <div class="field_names"><b>Username</b></div>
+             <input type="text" name="name" placeholder="Enter your first name" ng-model="myProfileData.name" style="text-transform: capitalize;" autocomplete="off" 
+             ng-change="hideErromessOnchange();" class="field_content" required>
+             <label class="item item-input" ng-show="editprofile.name.$dirty && editprofile.name.$invalid">
+                <span style="color:red">
+                <span ng-show="editprofile.name.$error.required">Name Required</span>
+                </span>
+             </label> 
+           </li>
+           <li>
+              <div class="field_names"><b>Email</b></div>
+              <div ng-model="myProfileData.email" class="field_content" style="font-size: 14px;">{{myProfileData.email}}</div>
+              <!-- <input type="email" name="email" placeholder="e.g.,hellman@gmail.com" ng-model="loginData.email" ng-change="hideErromessOnchange();" required>
+              <label class="item item-input" ng-show="register.email.$dirty && register.email.$invalid">  
+                 <span style="color:red">
+                 <span ng-show="register.email.$error.required">Email id can not be blank</span>
+                 <span ng-show="register.email.$error.email">This is not a valid email address.</span>
+                 </span>
+              </label>  -->
+           </li>
+           <li>
+             <div class="field_names"><b>DOB</b></div>
+             <input class="field_content" autofocus="off" type="date" name="dob" placeholder="Enter Your Date of Birth" ng-model="myProfileData.dob" value="{{myProfileData.dob}}" required>
+             <label class="item item-input" style="color:red" ng-show="editprofile.dob.$dirty && editprofile.dob.$invalid">
+               <span class="item item-input" style="color:red" ng-show="editprofile.dob.$error.required">
+                Date of Birth can not be blank
+               </span>
+            </label>
+           </li>
+           <li>
+            <div class="field_names"><b>Contact No</b></div>
+            <input type="text"  autofocus="off"  name="contact_no" placeholder="Enter your Contact Number" ng-model="myProfileData.contact_no" maxlength="10" numbers-only="numbers-only" class="field_content" required> 
+           </li>
+           <li >
+               <div style="color:red" ng-show="options.showError">
+                <label><span>{{options.ErrorMessage}}</span></label>
+               </div>
+           </li>
+           <li><input  ng-disabled="editprofile.name.$dirty && editprofile.name.$invalid || editprofile.dob.$dirty && editprofile.dob.$invalid" type="submit" value="Submit"></li>
+          </ul>
+      </div>  
+  </form> 
+ </div>
+ </div>
+
+
+ <div class="navbar navbar-inverse navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="brand" href="">PPL</a>
+      <div class="pro_info pull-right">
+        <div class="pro_icn"><img src="images/pic_small.png"></div>
+        <div class="pro_txt">Me<b class="caret"></b></div>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+          <li><a tabindex="-1" href="#">My Profile</a></li>
+          <li><a tabindex="-1" href="#">Message Box</a></li>
+          <li><a tabindex="-1" href="#">Change Language</a></li>
+          <li class="divider"></li>
+          <li><a tabindex="-1" href="#">
+            <input type="text" placeholder="search" >
+            </a></li>
+        </ul>
+      </div>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="active"> <a >Home</a> </li>
+          <li class=""> <a>E-Coupons</a> </li>
+          <li class=""> <a>E-Brands</a> </li>
+          <li class=""> <a>Resuse Market</a> </li>
+          <li class=""> <a>Lost and Found</a> </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="header">
+  <div class="header_lft">
+    <div class="logo"><a ui-sref="home"><img src="images/logo.png"></a></div>
+    <div class="navigatn">
+      <ul>
+        <li><a ui-sref="home">Home</a></li>
+        <li><a href="#"> E-Coupons </a></li>
+        <li><a href="#">E-Brands </a></li>
+        <li><a href="#"> Resuse Market </a></li>
+        <li><a href="#"> Lost and Found</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="header_rgt">
+    <div class="flag_div"><img src="images/flag.png"></div>
+    <input type="text" placeholder="Search" class="txt_box">
+    <!-- <div class="msg_box"><a href="#"><span class="msg_count">100</span></a></div>
+    <div class="info_div">
+      <div class="image_div"> <img src="images/pic.png"> </div>
+      <div class="info_div1">Me</div>
+    </div> -->
+  </div>
+</div>
+<div class="container">
+  <div class="content">
+
+    <div class="content_rgt">
+       <form ng-submit="editProfilePopUp()" name="myprofile" novalidate>
+       <div class="myprofile_sec" >
+         <h1>My Profile</h1>
+          <ul id="marginTop">
+    <!-- <li><span>Username</span><input type="text" placeholder="Enter your username"></li> -->
+           <li>
+            <img ng-if="!myProfileData.photo" ng-src="images/pic.png" type="file">
+            <img ng-if="myProfileData.photo" ng-src="{{url}}/{{myProfileData.photo}}">
+             <!-- <img ng-src="{{url}}/{{myProfileData.photo}}"> -->
+           </li>
+           <li>
+             <span>Name</span>
+             <div>{{myProfileData.name}}</div>
+           </li>
+           <li>
+              <span>Email</span>
+              <div>{{myProfileData.email}}</div>
+           </li>
+           <li>
+              <span>DOB</span>
+              <div>{{myProfileData.dob | amDateFormat: 'dddd, MMMM Do YYYY'}}</div>
+           </li>
+           <li>
+              <span>Contact No</span>
+              <div>{{myProfileData.contact_no}}</div>
+           </li>
+           <li><input type="submit" value="Edit"></li>
+          </ul>
+       </div>
+      </form>
+     
+    </div>
+
+    <div class="content_lft">
+    <h1>Welcome from PPL!</h1>
+    <p class="discrptn">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. </p>
+    <img src="images/img_9.png"  alt=""/> </div>
+  </div>
+</div>
+
+<div class="clear"></div>
+</div>
+<div class="footr">
+  <div class="footr_lft">
+    <div class="footer_div1">Copyright © Pet-Socail 2014 All Rights Reserved</div>
+    <div class="footer_div2"><a href="#">Privacy Policy </a>| <a href="#"> Terms & Conditions</a></div>
+  </div>
+  <div class="footr_rgt">
+    <ul>
+      <li><a href="#"><img src="images/social_1.png"></a></li>
+      <li><a href="#"><img src="images/social_2.png"></a></li>
+      <li><a href="#"><img src="images/social_3.png"></a></li>
+      <li><a href="#"><img src="images/social_4.png"></a></li>
+    </ul>
+  </div>
+</div>
+

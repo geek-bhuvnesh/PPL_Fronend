@@ -7,8 +7,16 @@ PPL_Frontend.factory("addComment",["$resource","pplconfig",function($resource,pp
    });
 }]);
 
+PPL_Frontend.factory("newcomments", ["$resource","pplconfig",function($resource,pplconfig) {
+    return $resource(pplconfig.url+":3000/newComments/:postid/:existCommentsLength/:limit", {
+      postid: '@postid',
+      existCommentsLength: '@existCommentsLength',
+      limit : '@limit'
+   }, {});
+}]);
 
-PPL_Frontend.factory("PostDataService", ["$http", "$q", "addComment", function($http, $q, addComment) {
+
+PPL_Frontend.factory("PostDataService", ["$http", "$q", "addComment","newcomments", function($http, $q, addComment,newcomments) {
    var commentData = {};
    var selected;
    return {
@@ -36,6 +44,29 @@ PPL_Frontend.factory("PostDataService", ["$http", "$q", "addComment", function($
                defer.reject({});
            }
            return defer.promise;
-       }
+       },
+        getNewComments: function(postid,existCommentsLength,limit){
+         console.log("ALL New Comments factory");
+           var defer = $q.defer();
+           try {
+               newcomments
+                   .get({
+                    "postid" : postid,
+                    "existCommentsLength":existCommentsLength,
+                    "limit" : limit,
+                   },function(resp) {
+                      userData = resp;
+                      defer.resolve(resp);
+                   },function(err) {
+                       userData = {};
+                       defer.reject({});
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               defer.reject({});
+           }
+           return defer.promise;
+       } 
    }
 }]);

@@ -1,6 +1,7 @@
 PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','localstorageFactory','$state','ngDialog','Upload','$filter','$timeout',function($scope,$http,HomeDataService,localstorageFactory,$state,ngDialog,Upload,$filter,$timeout){
- console.log("Inside Controller");
-	
+ console.log("Inside Home Controller");
+	 
+ /*@@@@@@@@@@@@@@@@@@-------------------Variables Initialisation-----------------------@@@@@@@@@@@@@@@@@@@@@@****/
 
  $scope.options = {
      ErrorMessage :"",
@@ -12,42 +13,83 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
    "count" : 0,
    "showNewPost" : false
  }
-
  
- $scope.User_logged_in = true;
- console.log("1:",localstorageFactory.getUserData('userData').email);
- if(!localstorageFactory.getUserData('userData').email){
- 	  console.log("2");
-    $scope.User_logged_in = false;
-    //$state.go('login');
- }
- console.log("is User_logged_in:" +$scope.User_logged_in);
- 
- $scope.userData = localstorageFactory.getUserData('userData');
- console.log("userData in HomeController" ,$scope.userData);
+ $scope.skip = 0;
+ $scope.limit = 4;
 
+ $scope.posts =[];
  $scope.tempArray = [];
- //Get All posts
- HomeDataService.getAllPosts().then(function(data){
-   //console.log("Posts Data in Home Controller before:" + JSON.stringify(data));
-   $scope.featured_array = [];
-   data.forEach(function(obj){
-    var index =  data.indexOf(obj);
-    var tempObj ={};
-    if(obj.featuredPost==true){
-      $scope.featured_array.push(obj);
-    }
+ $scope.featured_array = [];
+
+ $scope.fetching = false;
+ $scope.disabled = false;
+ $scope.categoryType = "ALL";
+
+ $scope.catgoryMessage = {
+     message : "",
+     showMess :false
+ }
+
+ $scope.filterArray = {
+   "latest_first" : "Latest First",
+   "oldest_first" : "Oldest First",
+   "most_pet" : "Most Pet",
+   "most_clicks" : "Most Clicks",
+   "most_commented" : "Most Commented",
+
+ }
+
+ $scope.flagCheckboxModel = {
+    selected: false
+ }   
+
+
+ $scope.User_logged_in = true;
+ 
+  if(!localstorageFactory.getUserData('userData').email){
+    $scope.User_logged_in = false;
+  }
+ 
+  $scope.userData = localstorageFactory.getUserData('userData');
+  console.log("userData in HomeController" ,$scope.userData);
+
+$scope.flaggedPosts =[];
+$scope.tempPreviousPost =[];
+$scope.isFlagged = false;
+
+$scope.flaggedList = function($event) {
+
+  $scope.isFlagged = true;
+  console.log("")
+  if($event==true){
+     $scope.tempPreviousPost = $scope.posts;
+     $scope.posts =[];
+     $scope.tempArray.forEach(function(value){
+        if(value.flagcount>0){
+          $scope.posts.push(value);
+        }
+     })
+     $scope.flaggedPosts = $scope.posts;
+    //alert($event);
+  } else{
+     $scope.isFlagged = false; 
+     //$scope.posts = $scope.setLikeUnlikeFlagUnflagFun($scope.tempPreviousPost);
+     console.log("temp prev post at unflag,length,event:" +JSON.stringify($scope.tempPreviousPost),$scope.tempPreviousPost.length,$event)
+     $scope.tempPreviousPost.forEach(function(obj){
+      var index =  $scope.tempPreviousPost.indexOf(obj);
+      var tempObj ={};
+    
     if(obj.likeby.indexOf($scope.userData._id)>-1){
       obj["likeOrUnlike"] = "Unlike";
       if(obj.flagby.indexOf($scope.userData._id)>-1){
         obj["flagOrUnflag"] = "Unflag";
         tempObj = obj;
-        data.splice(index, 1, tempObj);
+        $scope.tempPreviousPost.splice(index, 1, tempObj);
   
       } else {
         obj["flagOrUnflag"] = "Flag";
         tempObj = obj;
-        data.splice(index, 1, tempObj);
+        $scope.tempPreviousPost.splice(index, 1, tempObj);
       }
   
     } else {
@@ -55,41 +97,268 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
       if(obj.flagby.indexOf($scope.userData._id)>-1){
            obj["flagOrUnflag"] = "Unflag";
            tempObj = obj;
-           data.splice(index, 1, tempObj);
+           $scope.tempPreviousPost.splice(index, 1, tempObj);
       } else {
            obj["flagOrUnflag"] = "Flag";
            tempObj = obj;
-           data.splice(index, 1, tempObj);
+          $scope.tempPreviousPost.splice(index, 1, tempObj);
       }
   
     } 
    
    })
-   $scope.posts = data.reverse();
-   console.log("-----------------");
-   //console.log("Posts Data in Home Controller After:" + JSON.stringify($scope.posts));
+   $scope.posts = $scope.tempPreviousPost;
    $scope.tempArray = $scope.posts;
-   //console.log("featured_array,length:" +JSON.stringify($scope.featured_array),$scope.featured_array.length);
-   $scope.newPosts.showNewPost =  false;
-   $scope.makeCall();
+   console.log("temp.length,$scope.categoryType,Post length at unflag:", $scope.tempArray.length,$scope.categoryType,$scope.posts.length);
+   //console.log(">>>>>>>>>>>>>Previoustempost,isFlagged,length:" +JSON.stringify($scope.tempPreviousPost) ,$scope.isFlagged,$scope.tempPreviousPost.length)
+  }
+   $scope.filterPosts($scope.categoryType);
+  //console.log("Flagged Post,length:" +JSON.stringify($scope.posts),$scope.posts.length);
+} 
+
+
+ //Get featuredpost
+ $scope.featuredPostLimit = 4;
+ $scope.featuredPostBool = true;
+
+ HomeDataService.getFeaturedPosts($scope.featuredPostLimit,$scope.featuredPostBool).then(function(data){
+    //console.log("featuredData in Home Controller:" + JSON.stringify(data));
+    $scope.featuredposts = data;
+    localstorageFactory.setFeaturedData('featuredData',$scope.featuredposts);
+    $scope.makeCall();
  },function(err){
-   console.log("error:",err);
-   $scope.options.showError = true;
-   $scope.options.ErrorMessage = err.message
+    console.log("error:",err);
+    $scope.options.showError = true;
+    $scope.options.ErrorMessage = err.message
  })
 
- 
+
+$scope.loadMore = function() {
+  $scope.fetching = true;
+
+  HomeDataService.getAllPosts($scope.limit,$scope.skip).then(function(data){
+   //console.log(" Posts Data,length On Success:" + JSON.stringify(data),data.length);
+
+    $scope.fetching = false;
+    if (data.length>0) {
+      //$scope.disabled = false
+     /* if($scope.tempPreviousPost.length>0){
+          console.log("tempPreviousPost length:",$scope.tempPreviousPost.length);;
+          $scope.posts = $scope.tempPreviousPost;
+      }*/
+      for(var i = 0; i < data.length; i++) {
+          if($scope.isFlagged){
+            //console.log("is Flagged,previous length,Posts length:",$scope.isFlagged,$scope.tempPreviousPost.length,$scope.posts.length);
+            if(data[i].flagcount>0){
+              $scope.posts.push(data[i]);
+            }
+            $scope.tempPreviousPost.push(data[i]);
+          }else{
+            $scope.posts.push(data[i]);
+          } 
+          $scope.flaggedPosts = $scope.posts;
+        } 
+    } else {
+        $scope.disabled = true; // Disable further calls if there are no more items
+    }
+    //console.log("Flagged post second scroll,length:" + JSON.stringify($scope.posts),$scope.posts.length);
+    if($scope.isFlagged){
+      $scope.skip = $scope.skip + data.length;
+    } else{
+       $scope.skip = $scope.posts.length;  
+    }
+                                    //$scope.skip + $scope.limit;
+        if (!$scope.$$phase) {
+          $scope.$apply();
+        }
+  
+    //$scope.posts = $scope.setLikeUnlikeFlagUnflagFun($scope.posts);
+
+    $scope.posts.forEach(function(obj){
+      var index =  $scope.posts.indexOf(obj);
+      var tempObj ={};
+    
+    if(obj.likeby.indexOf($scope.userData._id)>-1){
+      obj["likeOrUnlike"] = "Unlike";
+      if(obj.flagby.indexOf($scope.userData._id)>-1){
+        obj["flagOrUnflag"] = "Unflag";
+        tempObj = obj;
+        $scope.posts.splice(index, 1, tempObj);
+  
+      } else {
+        obj["flagOrUnflag"] = "Flag";
+        tempObj = obj;
+        $scope.posts.splice(index, 1, tempObj);
+      }
+  
+    } else {
+      obj["likeOrUnlike"] = "Likes";
+      if(obj.flagby.indexOf($scope.userData._id)>-1){
+           obj["flagOrUnflag"] = "Unflag";
+           tempObj = obj;
+           $scope.posts.splice(index, 1, tempObj);
+      } else {
+           obj["flagOrUnflag"] = "Flag";
+           tempObj = obj;
+          $scope.posts.splice(index, 1, tempObj);
+      }
+  
+    } 
+   
+   })
+
+    $scope.tempArray = $scope.posts;
+    //alert(">>>>>>>>catType:"+$scope.categoryType);
+    //alert(">>>>>>>>Length:"+data.length);
+    if(data.length>0){
+      $scope.filterPosts($scope.categoryType);
+    } 
+    $scope.newPosts.showNewPost =  false;
+
+  },function(err){
+     console.log("error:",err);
+     $scope.options.showError = true;
+     $scope.options.ErrorMessage = err.message
+  })  
+
+};
+
+$scope.setLikeUnlikeFlagUnflagFun = function(array){
+  return array.forEach(function(obj){
+      var index =  array.indexOf(obj);
+      var tempObj ={};
+    
+    if(obj.likeby.indexOf($scope.userData._id)>-1){
+      obj["likeOrUnlike"] = "Unlike";
+      if(obj.flagby.indexOf($scope.userData._id)>-1){
+        obj["flagOrUnflag"] = "Unflag";
+        tempObj = obj;
+        array.splice(index, 1, tempObj);
+  
+      } else {
+        obj["flagOrUnflag"] = "Flag";
+        tempObj = obj;
+        array.splice(index, 1, tempObj);
+      }
+  
+    } else {
+      obj["likeOrUnlike"] = "Likes";
+      if(obj.flagby.indexOf($scope.userData._id)>-1){
+           obj["flagOrUnflag"] = "Unflag";
+           tempObj = obj;
+           array.splice(index, 1, tempObj);
+      } else {
+           obj["flagOrUnflag"] = "Flag";
+           tempObj = obj;
+          array.splice(index, 1, tempObj);
+      }
+  
+    } 
+   
+   })
+ } 
+
+ var catAllObj = {
+  "catName" : "ALL",
+  "image" : "icon_00.png"
+ }
  //Get All category
  HomeDataService.getAllCategories().then(function(data){
-  //console.log("Catgeory Data in Home Controller:" + JSON.stringify(data));
-  localstorageFactory.setUserData('categoryData',data);
-  $scope.categories = data;
-
+    console.log("Catgeory Data in Home Controller:" + JSON.stringify(data));
+    data.splice(0,0,catAllObj);
+    console.log("Catgeory Data in Home Controller After:" + JSON.stringify(data));
+    localstorageFactory.setCategoryData('categoryData',data);
+    $scope.categories = data;
+   
  },function(err){
-   console.log("error:",err);
-   $scope.options.showError = true;
-   $scope.options.ErrorMessage = err.message
+    console.log("error:",err);
+    $scope.options.showError = true;
+    $scope.options.ErrorMessage = err.message
  })
+
+
+ // new posts
+ 
+
+ $scope.makeCall = function() {
+      /*alert("$scope.categoryType:" +$scope.categoryType);
+      alert("Post Array Length:" +$scope.posts.length);*/
+     /* var date = new Date();
+      var currentTime = date.toISOString();
+      console.log("N:" +currentTime);*/
+      //console.log("Posts in Make call:" +JSON.stringify($scope.posts));
+      
+      if($scope.posts.length>0){
+          console.log("cat Type:",$scope.categoryType);
+          if($scope.categoryType == "Most Commented" || $scope.categoryType == "Most Pet" || $scope.categoryType == "Most Clicks"){
+             var date = new Date(new Date - 20000);
+             console.log("Date:" ,date);
+             var currentTime = date.toISOString();
+          } else{
+             if($scope.isFlagged){
+              console.log("$scope.tempPreviousPost,isFlagged:" +JSON.stringify($scope.tempPreviousPost),$scope.isFlagged);
+              var currentTime = $scope.tempPreviousPost[0].postedOn;
+            } else {
+              var currentTime = $scope.posts[0].postedOn;
+            }
+         }
+      }  
+
+      
+      
+      HomeDataService.getNewPost($scope.categoryType,currentTime,$scope.isFlagged).then(function(data){
+          console.log("New Post Data.length:" +JSON.stringify(data),data.length);
+          $scope.newPostsArray =[];
+          if(data.length>0){
+            $scope.newPosts.count = data.length;
+            $scope.newPosts.showNewPost =  true;
+            $scope.newPostsArray = data;
+          } else {
+            $scope.newPosts.count = 0;
+            $scope.newPosts.showNewPost =  false;
+            $scope.newPostsArray = [];
+          }
+      },function(err){
+
+      })
+           // start next API call after some timeout
+      $timeout(function() {
+          $scope.makeCall();
+      }, 20000);  
+
+}
+
+
+
+$scope.newPosts = function(){
+ $scope.newPostsArray.forEach(function(value){
+   console.log("type of:" +typeof value.featuredPost)
+   if(value.featuredPost == true){
+      $scope.featured_array.push(value);
+   }
+
+   if($scope.isFlagged){
+    $scope.tempPreviousPost.push(value); 
+    $scope.posts =[];
+    $scope.posts = $scope.flaggedPosts;
+    if(value.flagcount>0){
+      $scope.posts.push(value);
+    }
+   } else{
+    if($scope.categoryType == "Oldest First"){
+     $scope.posts.push(value)
+    } else{
+     $scope.posts.splice(0,0,value);
+   }
+  }
+   
+ })
+
+ localstorageFactory.setFeaturedData('featuredData',$scope.featured_array);
+
+ $scope.newPosts.showNewPost =  false;
+
+}
 
  $scope.logout = function(){
     console.log("Logout called");
@@ -104,45 +373,50 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
     })
 
   }
-  
-  
 
-  $scope.catgoryMessage = {
-     message : "",
-     showMess :false
+  $scope.gotToProfile = function(){
+    console.log("got to myprofile")
+    $state.go('myprofile', {userId: $scope.userData._id });
   }
+  
 
-  $scope.filterArray = {
-   "latest_first" : "Latest First",
-   "oldest_first" : "Oldest First",
-   "most_pet" : "Most Pet",
-   "most_clicks" : "Most Clicks",
-   "most_commented" : "Most Commented",
+  
 
-  }
+  /*@@@@@@@@@@@@----------------Filters of Posts various conditions -------------------------------*@@@@@@@@@@@@@@@@****/
+
   $scope.filterPosts = function(category){
+   $scope.FilterSortArray =[];
+   if($scope.isFlagged){
+     $scope.FilterSortArray =  $scope.flaggedPosts;
+   } else {
+     $scope.FilterSortArray =  $scope.tempArray;
+   }
+
+   $scope.categoryType =  category;
    $scope.catgoryMessage.showMess = false;
-   console.log("category:",category);
+   console.log("-------------------------------------------------------------->>>>",$scope.FilterSortArray.length);
+   //console.log("Posts temparray,Length,category:"+JSON.stringify($scope.tempArray),$scope.tempArray.length,category);
+  
   if(category =="Latest First") {
     $scope.posts = [];
     var temp_catgory_array =[];
-    temp_catgory_array = $scope.tempArray;
+    temp_catgory_array = $scope.FilterSortArray;
     $scope.posts = temp_catgory_array; 
 
   } else if (category =="Oldest First"){
     $scope.posts = [];
     var temp_catgory_array =[];
-    $scope.tempArray.forEach(function(value){
+    $scope.FilterSortArray.forEach(function(value){
       temp_catgory_array.push(value);
     });
     $scope.posts = temp_catgory_array.reverse();
 
-    console.log("oldest after reverse temparray" + JSON.stringify($scope.tempArray));
+    //console.log("oldest after reverse temparray" + JSON.stringify($scope.FilterSortArray));
 
   } else if (category == "Most Pet") {
     $scope.posts =[];
     var temp_pet_array = [];
-    $scope.tempArray.forEach(function(value){
+    $scope.FilterSortArray.forEach(function(value){
       temp_pet_array.push(value);
     });
 
@@ -163,7 +437,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
     $scope.posts =[];
     var temp_most_click_array = [];
-    $scope.tempArray.forEach(function(value){
+    $scope.FilterSortArray.forEach(function(value){
       temp_most_click_array.push(value);
     });
 
@@ -184,7 +458,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
     
     $scope.posts =[];
     var temp_most_commented_array = [];
-    $scope.tempArray.forEach(function(value){
+    $scope.FilterSortArray.forEach(function(value){
       temp_most_commented_array.push(value);
     });
 
@@ -202,14 +476,14 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
    $scope.posts = temp_most_commented_array;
 
   } else{
-    console.log("$scope.post in inside category click" +JSON.stringify($scope.tempArray));
+    console.log("Posts Array inside selected category call:" +JSON.stringify($scope.FilterSortArray));
     $scope.posts = [];
     if(category =="ALL"){
-      $scope.posts = $scope.tempArray;
+      $scope.posts = $scope.FilterSortArray;
     }
-    for(var i=0; i<$scope.tempArray.length;i++){
-    if($scope.tempArray[i]["catType"]==category){
-      $scope.posts.push($scope.tempArray[i]); 
+    for(var i=0; i<$scope.FilterSortArray.length;i++){
+    if($scope.FilterSortArray[i].catId.catName==category){
+      $scope.posts.push($scope.FilterSortArray[i]); 
      }
    }
    if($scope.posts.length<1){
@@ -220,7 +494,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
   }
 
- //Like or unlike work
+ /*@@@@@@@@@@@@----------------Like and Unlike Functions-------------------------------*@@@@@@@@@@@@@@@@****/
 
  $scope.likeOrUnlike = function(selectedPost,likeOrUnlike){
   console.log("selectedPost:" +JSON.stringify(selectedPost));
@@ -310,7 +584,8 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
  //Flag or unflag work
   
   $scope.flagOrUnflag = function(selectedPost,flagOrUnflag){
-  console.log("selectedPost:" +JSON.stringify(selectedPost));
+ 
+  console.log("Selected Post:" +JSON.stringify(selectedPost));
   console.log("flag or flagOrUnflag:" +flagOrUnflag);
 
   if(flagOrUnflag =="Flag"){
@@ -406,9 +681,18 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
 
    if(data.likeby.indexOf($scope.userData._id)>-1){
       data["likeOrUnlike"] = "Unlike";
+      if(data.flagby.indexOf($scope.userData._id)>-1){
+        data["flagOrUnflag"] = "Unflag";
+      } else{
+        data["flagOrUnflag"] = "Flag";
+      }
     } else {
-
       data["likeOrUnlike"] = "Likes";
+      if(data.flagby.indexOf($scope.userData._id)>-1){
+        data["flagOrUnflag"] = "Unflag";
+      } else{
+        data["flagOrUnflag"] = "Flag";
+      }
     }
     console.log("Single post data success:" +JSON.stringify(data));
   
@@ -422,7 +706,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
       $scope.posts.splice(index, 1, tempObj);
 
     localstorageFactory.setPostData('postData',data)
-    //$state.go('post');
+    $state.go('post');
 
   },function(err){
 
@@ -430,42 +714,7 @@ PPL_Frontend.controller('HomeController',['$scope','$http','HomeDataService','lo
   
  }
 
- // new posts
  
-
- $scope.makeCall = function() {
-      console.log("Post Array Length:" +$scope.posts.length);
-      HomeDataService.getNewPost($scope.posts.length).then(function(data){
-          console.log("New Post Data:" +JSON.stringify(data));
-          $scope.newPostsArray =[];
-          if(data.length>0){
-            $scope.newPosts.count = data.length;
-            $scope.newPosts.showNewPost =  true;
-            $scope.newPostsArray = data;
-          } else {
-            $scope.newPosts.count = 0;
-            $scope.newPosts.showNewPost =  false;
-            $scope.newPostsArray = [];
-          }
-      },function(err){
-
-      })
-           // start next API call after some timeout
-      $timeout(function() {
-          $scope.makeCall();
-      }, 20000);
-}
-
-$scope.newPosts = function(){
-//console.log("Posts length before:" ,$scope.posts.length);
- $scope.newPostsArray.forEach(function(value){
-   console.log("ABC:" + JSON.stringify(value));
-   $scope.posts.splice(0,0,value);
- })
-console.log("Posts length after:" ,$scope.posts.length);
-//$scope.newPosts.showNewPost =  false;
-
-}
 
 
  $scope.OK = function(){
@@ -476,93 +725,66 @@ console.log("Posts length after:" ,$scope.posts.length);
 
  }
 
+ /*****@@@@*****--------------------Upload Image ----------------------------------------*****@@@@*****/
+
  $scope.uploadPost = function () {
+    //delete $scope.categories[0]
+
+    //$scope.selectedCategoryData = $scope.categories[1];
+
     $scope.showPostimage = false;
-    if(!$scope.userData.email){
+
+    if (!$scope.userData.email) {
        $scope.options.popup = true;
     } else {  
 
-     console.log("upload post function:");
      ngDialog.open({
       template: 'screens/home/post.html',
       className: 'ngDialog-theme-default',
       scope: $scope,
-      controller: ['$scope','Upload','HomeDataService','pplconfig','$filter', function($scope,Upload,HomeDataService,pplconfig,$filter) {
+      controller: ['$scope','Upload','HomeDataService','pplconfig','$filter','localstorageFactory', function($scope,Upload,HomeDataService,pplconfig,$filter,localstorageFactory) {
+        console.log("Inside Upload post controller:" +JSON.stringify($scope.post));
+        console.log("User Data Upload Post Controller:", $scope.userData);
 
-
-        console.log(">>>>>>>>>", $scope.userData);
         $scope.post ={
             "postTitle" :"",
-            "catType" : "",
-            /*"creatorImage" : $scope.userData.image,*/
+            //"catType" : "",
             "creatorName"  : $scope.userData.username,
             "postedOn"     : "",
             "postImage"    : "" 
 
         }
-        console.log("inside post controller:" +JSON.stringify($scope.post));
+        
+        $scope.upload = function ($files) {
+           console.log("files:",$files);
+           for (var i = 0; i < $files.length; i++) {
+           var file = $files[i]; 
+           console.log("file:",file)
+           Upload.upload({
+               url: pplconfig.url+":3000/imageUpload",
+               method: 'POST',
+               fields: {'imgType': "post"},
+               file: file
+          }).progress(function (evt) {
+               var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+               console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+          }).success(function (data, status, headers, config) {
+               console.log("Data:",data);
+               console.log("File path:",data.path);
+               $scope.post.postImage = data.path.replace("home/com52/PPL/PPL_SITE/PPL_Backend/fileUpload", '');
+               $scope.showPostimage = true;
+               console.log("Post Image Path:",$scope.post.postImage);
 
-        /*$scope.onFileSelect = function($files) {
-        console.log("image:", $files);
-        $scope.upload = $upload.upload({
-            url: '/imageUpload',
-            method: 'POST',
-            data: {
-                email_id: $scope.userId
-            },
-            file: $files[0],
-            alias: "file"
-        }).progress(function(evt) {
-            console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
-        }).success(function(data, status, headers, config) {
-            console.log("Image Data: ", data);
-            if (status == 200 && data) {
-                console.log(data.path);
-                $scope.ProfileValues.image = data.path.replace("public", '');
-            }
-         });
-      }
-    */
-    /*var host = 'http://localhost'*/
-    // upload on file select or drop
-
-    $scope.upload = function ($files) {
-      console.log("files:",$files);
-       for (var i = 0; i < $files.length; i++) {
-        console.log("----------------------");
-        var file = $files[i]; 
-        console.log("file:",file)
-        Upload.upload({
-            url: pplconfig.url+":3000/imageUpload",
-            method: 'POST',
-            fields: {'username': $scope.username},
-            file: file
-        }).progress(function (evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-        }).success(function (data, status, headers, config) {
-            console.log("Data:",data);
-            console.log("----------------------");
-            console.log("File path:",data.path);
-            $scope.post.postImage = data.path.replace("fileUpload", '');
-            $scope.showPostimage = true;
-            //$scope.post.postImage = data.path;
-
-            console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-        }).error(function (data, status, headers, config) {
+          }).error(function (data, status, headers, config) {
             console.log('error status: ' + status);
-        })
-       } 
-    };
-    
-        // controller logic
-        console.log("$scope.categories:" +JSON.stringify($scope.categories));
-        
+          })
+         } 
+        };
+
         $scope.submitPost = function(){
-         /* alert(">>>>>" + JSON.stringify($scope.selectedCategoryData));*/
-        $scope.options.showError = false;
+         $scope.options.showError = false;
         
-        if(!$scope.post.postTitle){
+         if(!$scope.post.postTitle){
           console.log("0");
           $scope.options.showError = true;
           $scope.options.ErrorMessage = "Please Enter the Title for Post";
@@ -577,27 +799,26 @@ console.log("Posts length after:" ,$scope.posts.length);
            $scope.options.showError = true;
            $scope.options.ErrorMessage = "Please upload image for post";
            return; 
-        } else {
+        } 
+        else {
 
           $scope.postData = {};
           $scope.postData.postedBy = $scope.userData._id;
           $scope.postData.postTitle = $scope.post.postTitle;
-          $scope.postData.catType = $scope.selectedCategoryData.catName;
+          //$scope.postData.catType = $scope.selectedCategoryData.catName;
+          $scope.postData.catId = $scope.selectedCategoryData._id;
           $scope.postData.postImage = $scope.post.postImage;
           
-          console.log("$scope.postData:" +JSON.stringify($scope.postData));
+          console.log("Upload Post Requested Data:" +JSON.stringify($scope.postData));
+
           HomeDataService.createPost($scope.postData).then(function(data){
-            console.log("Post Data:" + JSON.stringify(data));
+            console.log("Post Data success:" + JSON.stringify(data));
+
             $scope.catgoryMessage.showMess = false;
 
-            //var timestamp1 = new Date(data.postedOn)
-            /*var filterdatetime = $filter('date')(data.postedOn);
-
-            alert("filterdatetime:" +filterdatetime);*/
             data["likeOrUnlike"] = "Likes";
             $scope.posts.unshift(data);
-            console.log("--------------------------------------------:");
-            console.log("Posts after new post:" + JSON.stringify($scope.posts)); 
+            console.log("Posts Array after newly created post:" + JSON.stringify($scope.posts)); 
             $scope.closepopup = true;
             $scope.closeThisDialog($scope.closepopup);
 
@@ -615,42 +836,14 @@ console.log("Posts length after:" ,$scope.posts.length);
   } //end of else
 
  };
+
+
+ $scope.adminPage = function(){
+  
+   $state.go('adminview');
+ }
   
 
 }])
 
-
-/*PPL_Frontend.filter('date', function($filter)
-{
-
- return function(input)
- {
-  //console.log("input:",input);
-  if(input == null)
-  { 
-      return ""; 
-  } 
-  var _date = $filter('date')(new Date(input), 'dd MMM yyyy');
-  console.log("")
-  //return 
-  _date.toUpperCase();
-
- };
-});
-*/
-/*PPL_Frontend.controller('numbersController',function($scope){
-   //infinite scrolling
-    console.log("$scope.posts in number controller:" ,$scope.posts);
-    $scope.postsArray = [];
-    $scope.counter = 0;
-
-    $scope.loadMore = function () {
-
-        for (var i = 0; i < 25; i++) {
-            $scope.postsArray.push(++$scope.counter);
-        };
-    }
-    $scope.loadMore();
-});
-*/
 

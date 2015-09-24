@@ -127,8 +127,10 @@ div select{
     <div>
       <div class="headertext">Category</div>
       <div>
-          <!--  <input autofocus="autofocus" type="text" name="catType" placeholder="e.g.,Cats" ng-model="post.catType" class="inputBox"> -->
-          <select ng-model="selectedCategoryData" ng-options="category.catName for category in categories">
+          <!--  <input autofocus="autofocus" type="text" name="catType" placeholder="e.g.,Cats" ng-model="post.catType" class="inputBox"> ng-init="categories[0]"-->
+          {{selectedCategoryData}}
+          <select  ng-model="selectedCategoryData" ng-options="category.catName for category in categories | filter: {catName: '!ALL'} ">
+           <option value="" selected hidden />
           </select>
       </div>
     </div> 

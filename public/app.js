@@ -37,10 +37,23 @@ PPL_Frontend.config(function($stateProvider,$urlRouterProvider,$httpProvider){
     url:'/changepassword',
     templateUrl:'screens/changepassword/changepassword.html',
     controller:'ChangePasswordController'
+  }).state('myprofile',{
+    url:'/myprofile/:userId',
+    templateUrl:'screens/my_profile/myprofile.html',
+    resolve : {
+                MyProfile:  function($stateParams,editProfileFactory) {
+                return editProfileFactory.getMyProfileData($stateParams.userId);
+               }        
+        },
+    controller: 'MyProfileController'
+  }).state('adminview',{
+    url:'/adminview',
+    templateUrl:'screens/admin/admin.html',
+    controller: 'AdminController'
   })
 
     $httpProvider.defaults.withCredentials = true;
-    $urlRouterProvider.otherwise('/home');
+    $urlRouterProvider.otherwise('/login');
 });
 
 
@@ -75,6 +88,12 @@ PPL_Frontend.factory('localstorageFactory', ['$window', function($window) {
     },
     getCategoryData: function(key){
       return JSON.parse($window.localStorage[key] || '{}');
+    }, 
+    setFeaturedData: function(key,value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getFeaturedData: function(key){
+      return JSON.parse($window.localStorage[key] || '[]');
     }
 
   }

@@ -36,7 +36,8 @@ PPL_Frontend.factory('pplconfig', function(){
          /*url: '192.168.100.129'*/
          /*url:'http://192.168.100.98'*/
          //url:'ionic.com'
-         url:'http://localhost'
+         /*url:'http://localhost'*/
+         url:'http://192.168.100.44'
     }
 });
 

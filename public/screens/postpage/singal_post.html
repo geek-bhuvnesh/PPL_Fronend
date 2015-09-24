@@ -50,7 +50,7 @@
       <!-- <div class="image_div"> <img src="images/pic.png"> </div> -->
      <!--  <div class="info_div1">Me</div> -->
       <div class="image_div"> 
-        <img src="images/pic.png"> 
+        <img ng-src="{{url}}{{userData.photo}}"> 
       </div>
       <!-- <div class="info_div1">Me</div> -->
       <!-- <div class="info_div1"> -->
@@ -59,8 +59,8 @@
            {{userData.username}}
           </button>
           <ul class="dropdown-menu">
-            <li><a>My Profile</a></li>
-            <li><a>change password</a></li>
+            <li><a ng-click="gotToProfile();">My Profile</a></li>
+            <li><a ui-sref="changepassword">change password</a></li>
             <li><a ng-click="logout();">Logout</a></li>
           </ul>
       </div>
@@ -71,11 +71,18 @@
 <div class="container">
   <div class="content">
     <div class="content_rgt">
-      <div class="rght_btn"> <span class="rght_btn_icon"><img src="images/btn_iconb.png" alt="up" /></span> <span class="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span> <a href="#">Upload Post</a> </div>
+      <div class="rght_btn"> 
+        <span class="rght_btn_icon">
+         <img src="images/btn_iconb.png" alt="up" />
+        </span>
+        <span class="btn_sep">
+         <img src="images/btn_sep.png" alt="sep" />
+        </span> <a href="#">Upload Post</a>
+      </div>
      <!--  <div class="rght_btn"> <span class="rght_btn_icon"><img src="images/btn_icona.png" alt="up" /></span> <span class="btn_sep"><img src="images/btn_sep.png" alt="sep" /></span> <a href="#">Invite Friends</a> </div> -->
      <div class="rght_cate">
          <div class="rght_cate_hd" id="rght_cat_bg">Categories</div>
-        <div class="rght_list" ng-repeat="category in categoryData track by $index">
+        <div class="rght_list" ng-repeat="category in categoryArrayData track by $index">
            <ul>
            <li><a ng-click="filterPosts(category.catName);"><span class="list_icon"><img src="images/{{category.image}}" alt="up" /></span>{{category.catName}}</a></li>
            </ul>
@@ -89,9 +96,19 @@
         </div> 
       </div>
       <div class="rght_cate">
-        <div class="rght_cate_hd" id="opn_cat_bg">Featured</div>
+        <div class="rght_cate_hd" id="opn_cat_bg" ng-if="featuredPostsData.length>0">Featured</div>
         <div class="sub_dwn">
-          <div class="feat_sec">
+          <div class="feat_sec" ng-repeat="featured_post in featuredPostsData track by $index">
+            <div class="feat_sec_img">
+            <img ng-src="{{url}}/{{featured_post.postImage}}" alt="image" />
+            </div>
+            <div class="feat_txt">{{featured_post.postTitle}}</div>
+            <div class="btm_rgt">
+              <div class="btm_arc">{{featured_post.catId.catName}}</div>
+            </div>
+          </div> 
+
+          <!-- <div class="feat_sec">
             <div class="feat_sec_img"><img src="images/feat_img1.png" alt="image" /></div>
             <div class="feat_txt">Lorem Ipusum Text</div>
             
@@ -109,7 +126,19 @@
             <div class="btm_rgt">
               <div class="btm_arc">Rabbits</div>
             </div>
-          </div>
+          </div> -->
+          
+          <!--  <div class="feat_sec" ng-repeat="featured_post in featuredArrayData track by $index | filter:{catType: postData.catType }">
+            <div class="feat_sec_img">
+            <img ng-src="{{url}}/{{featured_post.postImage}}" alt="image" />
+            </div>
+            <div class="feat_txt">{{featured_post.postTitle}}</div>
+            <div class="btm_rgt">
+              <div class="btm_arc">{{featured_post.catType}}</div>
+            </div>
+          </div> -->
+          
+
         </div>
       </div>
     </div>
@@ -119,7 +148,7 @@
         <div class="div_a">
           <div class="div_title">{{postData.postTitle}}</div>
           <div class="btm_rgt">
-              <div class="btm_arc">{{postData.catType}}</div>
+              <div class="btm_arc">{{postData.catId.catName}}</div>
             </div>
           <div class="div_top">
             <div class="div_top_lft"><img src="images/img_6.png">{{postData.postedBy.username}}</div>
@@ -131,8 +160,10 @@
             <div class="btm_list">
               <ul>
                 <li><a href="#"><span class="btn_icon"><img src="images/icon_001.png" alt="share" /></span>Share</a></li>
-                <li><a href="#"><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li>
-                 <li><a><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{postData.likecount}} Likes</a></li>
+               <!--  <li><a href="#"><span class="btn_icon"><img src="images/icon_002.png" alt="share" /></span>Flag</a></li> -->
+                 <li><a ng-click="flagOrUnflag(postData,postData.flagOrUnflag);"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{postData.flagcount}} {{postData.flagOrUnflag}}</a></li>
+
+                 <li><a ng-click="likeOrUnlike(postData,postData.likeOrUnlike);"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{postData.likecount}} {{postData.likeOrUnlike}}</a></li>
                 <!--  <li><a href="#"><span class="btn_icon"><img src="images/icon_003.png" alt="share" /></span>{{postData.likeOrUnlike}}</a></li> -->
                  
                 <li><a><span class="btn_icon"><img src="images/icon_004.png" alt="share" /></span>{{postData.commentcount}} Comments</a></li>
@@ -150,13 +181,14 @@
            <div class="cmnt_div1">
              <form target="_blank" ng-submit="addCommentFun()" name="addComment" novalidate>
               <input type="text" name="comment" placeholder="Write a comment" value="Enter your Comment" class="cmnt_bx1" ng-model="addComment.commentText"
-              style="text-transform: capitalize;" autocomplete="off" required>
+              style="text-transform: capitalize;" autocomplete="off" capitalize-first  required>
               <label class="item item-input" ng-show="addComment.comment.$dirty && addComment.comment.$invalid">
                 <span style="color:red">
                 <span ng-show="addComment.comment.$error.required">Please Enter Text before Submit</span>
                 </span>
               </label> 
               <input type="submit" ng-disabled="addComment.comment.$dirty && addComment.comment.$invalid" class="sub_bttn1" value="Submit Comment">
+             </form> 
            </div>
           </li>
           <li ng-repeat="comment in postData.comments|limitTo:postsShow">
@@ -174,7 +206,7 @@
             </div> -->
            </li>
         </ul>
-        <div class="view_div" ng-if="postData.commentcount>5 && postData.commentcount>postsShow"><a ng-click="viewMore();">View more</a></div>
+        <div class="view_div" ng-if="postData.commentcount>2 && postData.commentcount>postsShow"><a ng-click="viewMore();">View more</a></div>
       
       </div>
     </div>

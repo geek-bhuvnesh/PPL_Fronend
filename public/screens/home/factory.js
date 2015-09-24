@@ -9,8 +9,11 @@ PPL_Frontend.factory("allCategories", ["$resource","pplconfig",function($resourc
 }]);
 
 PPL_Frontend.factory("allposts", ["$resource","pplconfig",function($resource,pplconfig) {
-    return $resource(pplconfig.url+":3000/getAllPosts", {
-   }, {});
+    return $resource(pplconfig.url+":3000/getAllPosts/:limit/:skip", {
+   }, {
+    limit: '@limit',
+    skip:'@skip'
+  },{});
 }]);
 
 PPL_Frontend.factory("post",["$resource","pplconfig",function($resource,pplconfig) {
@@ -70,13 +73,23 @@ PPL_Frontend.factory("unflag",  ["$resource","pplconfig",function($resource,pplc
 }]);
 
 PPL_Frontend.factory("newposts", ["$resource","pplconfig",function($resource,pplconfig) {
-    return $resource(pplconfig.url+":3000/newPosts/:existPostsLength", {
-      existPostsLength: '@existPostsLength',
+    return $resource(pplconfig.url+":3000/newPosts/:catType/:currentTime/:isFlagged", {
+      catType : '@catType',
+      currentTime :'@currentTime',
+      isFlagged : '@isFlagged'
    }, {});
 }]);
 
 
-PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost","flag","unflag","newposts", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost,flag,unflag,newposts) {
+PPL_Frontend.factory("featuredpost", ["$resource","pplconfig",function($resource,pplconfig) {
+    return $resource(pplconfig.url+":3000/featuredposts/:limit/:featuredPostBool", {
+   },{
+    limit:'@limit',
+    featuredPostBool:'@featuredPostBool'
+   }, {});
+}]);
+
+PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories","allposts","post","like","unlike","getPost","flag","unflag","newposts","featuredpost", function($http, $q, logout,allCategories,allposts,post,like,unlike,getPost,flag,unflag,newposts,featuredpost) {
    var userData = {}; 
    var likeUnlikeData = {};
    var flagUnflagData = {};
@@ -121,12 +134,15 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
            }
            return defer.promise;
        },
-       getAllPosts: function(){
-         console.log("ALL Posts factory");
+       getAllPosts: function(limit,skip){
+         console.log("ALL Posts factory Limit,Skip:" +limit,skip);
            var defer = $q.defer();
            try {
                allposts
-                   .query(function(resp) {
+                   .query({
+                      limit: limit,
+                      skip:skip
+                   },function(resp) {
                       userData = resp;
                       defer.resolve(resp);
                    },function(err) {
@@ -148,7 +164,7 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
                   .save({
                         postedBy : postData.postedBy,
                         postTitle: postData.postTitle,
-                        catType : postData.catType,
+                        catId : postData.catId,
                         postImage : postData.postImage
                    }, function(resp) {
                        console.log("response post in factory:" +JSON.stringify(resp));
@@ -281,13 +297,37 @@ PPL_Frontend.factory("HomeDataService", ["$http", "$q", "logout","allCategories"
            return defer.promise;     
 
        },
-        getNewPost: function(existPostsLength){
+        getNewPost: function(categoryType,currentTime,isFlagged){
          console.log("ALL New Posts factory");
            var defer = $q.defer();
            try {
                newposts
                    .query({
-                    "existPostsLength":existPostsLength
+                    "catType" : categoryType,
+                    "currentTime" :currentTime,
+                    "isFlagged" : isFlagged
+                   },function(resp) {
+                      userData = resp;
+                      defer.resolve(resp);
+                   },function(err) {
+                       userData = {};
+                       defer.reject({});
+                       console.log(err);
+                   });
+           } catch (e) {
+               console.log(e.stack);
+               defer.reject({});
+           }
+           return defer.promise;
+       },
+       getFeaturedPosts: function(limit,featuredPostBool){
+         console.log("featured Posts factory:" +limit);
+           var defer = $q.defer();
+           try {
+               featuredpost
+                   .query({
+                      limit: limit,
+                      featuredPostBool :featuredPostBool
                    },function(resp) {
                       userData = resp;
                       defer.resolve(resp);
